@@ -1,0 +1,2 @@
+-mik a megbizhato forrasok ? honnan erdemes tajekozodni ?
+-milyen teszteket kell irni egy backend-hez ? unit test ? integration test ? end to end test ?
