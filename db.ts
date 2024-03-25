@@ -9,10 +9,12 @@ const dbConfig = {
 	port: Number(process.env.DATABASE_PORT),
 };
 
-const connectToDatabase = async () => {
+const connectToDatabase = async (query: (db: pg.Client) => any) => {
 	const db = new pg.Client(dbConfig);
 	await db.connect();
-	return db;
+	const value = await query(db);
+	await db.end();
+	return value;
 };
 
-export default connectToDatabase();
+export default connectToDatabase;

@@ -1,7 +1,9 @@
-import db from "../../db";
+import connectToDatabase from "../../db";
 
 export const getAllUsersFromDB = async () => {
-	const allUsers = await (await db).query("SELECT * FROM users");
-	(await db).end();
+	const response = await connectToDatabase(async (db) => {
+		return await db.query("SELECT * FROM users");
+	});
+	const allUsers = response.rows;
 	return allUsers;
 };
