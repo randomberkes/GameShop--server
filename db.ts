@@ -1,6 +1,7 @@
 import pg from "pg";
 import "dotenv/config";
 
+//connection pool
 const dbConfig = {
 	user: process.env.USER,
 	password: process.env.PASSWORD,

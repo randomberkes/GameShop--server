@@ -1,3 +1,4 @@
+-- migration manager
 CREATE TABLE products (
 	id SERIAL PRIMARY KEY,
 	name TEXT,
@@ -9,6 +10,34 @@ CREATE TABLE products (
 	description TEXT,
 	price TEXT
 )
+CREATE TABLE products (
+	id SERIAL PRIMARY KEY,
+	name TEXT,
+	description TEXT,
+	price TEXT
+)
+CREATE TABLE categoryTypes (
+	id SERIAL PRIMARY KEY,
+	category_type_name TEXT,
+)
+CREATE TABLE categories (
+	id SERIAL PRIMARY KEY,
+	category_name TEXT,
+	category_type_id INTEGER REFERENCES categoryTypes(id)
+)
+
+CREATE TABLE categoriesAndProducts (
+	product_id INTEGER REFERENCES products(id)
+	category_id INTEGER REFERENCES categories(id)
+	PRIMARY KEY (product_id, category_id)
+)
+
+INSERT INTO categoryTypes (category_name, category_type_id)
+VALUES ('PlayStation', 6), ('Egy Több', 4), ('Egy', 4), ('16+', 3), ('18+', 3), ('3+', 3), ('Kaland', 2), ('Sport', 2), ('Akció/Kaland', 2), ('Playstation 5', 1);
+
+INSERT INTO categoryTypes (category_type_name)
+VALUES ('Platform')
+-- VALUES ('Játékeszköz kompatibilitás'), ('Játék típusa'),( 'Rating PEGI (ajánlott korosztály)'), ('Játékosok száma');
 
 INSERT INTO products (name, platform, game_device_compatibility, game_type, rating_pegi, number_of_players, description, price)
 VALUES ('Marvels Spider-Man 2 játékszoftver, 
@@ -29,3 +58,5 @@ VALUES ('God of War Ragnarök, PlayStation 5', 'PlayStation',
 	   
 	   
 SELECT * FROM products;
+
+SELECT * FROM categorytypes;

@@ -13,6 +13,7 @@ export const getProductsByNameFromDB = async (
 	productName: string | ParsedQs | string[] | ParsedQs[] | undefined
 ) => {
 	const response = await connectToDatabase(async (db) => {
+		//prepare satemant
 		return await db.query(
 			`SELECT * FROM products WHERE LOWER(name) ~'.*${
 				typeof productName === "string"
