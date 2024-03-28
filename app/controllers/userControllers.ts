@@ -3,6 +3,5 @@ import { Request, Response } from "express";
 
 export const getUsers = async (req: Request, res: Response) => {
 	const users = await getAllUsersFromDB();
-	console.log(users);
 	res.json(users);
 };

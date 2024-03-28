@@ -32,7 +32,7 @@ CREATE TABLE categoriesAndProducts (
 	PRIMARY KEY (product_id, category_id)
 )
 
-INSERT INTO categoryTypes (category_name, category_type_id)
+INSERT INTO categories (category_name, category_type_id)
 VALUES ('PlayStation', 6), ('Egy Több', 4), ('Egy', 4), ('16+', 3), ('18+', 3), ('3+', 3), ('Kaland', 2), ('Sport', 2), ('Akció/Kaland', 2), ('Playstation 5', 1);
 
 INSERT INTO categoryTypes (category_type_name)
@@ -60,3 +60,20 @@ VALUES ('God of War Ragnarök, PlayStation 5', 'PlayStation',
 SELECT * FROM products;
 
 SELECT * FROM categorytypes;
+
+SELECT * FROM categories;
+
+SELECT * FROM categoriesandproducts;
+
+INSERT INTO categoriesandproducts VALUES (1,10), (2,10), (3,10)
+INSERT INTO categoriesandproducts VALUES (1,9), (2,8), (3,7)
+
+SELECT * FROM categoriesandproducts
+JOIN categories ON categories.id = categoriesandproducts.category_id
+JOIN products ON products.id = categoriesandproducts.product_id
+WHERE categories.category_name = 'Kaland'
+
+SELECT category_name, categories.id FROM categories 
+JOIN categorytypes ON categories.category_type_id = categorytypes.id
+WHERE categorytypes.category_type_name = 'Rating PEGI (ajánlott korosztály)';
+

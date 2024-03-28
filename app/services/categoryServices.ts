@@ -4,7 +4,6 @@ import connectToDatabase from "../../db";
 export const getCategoriesByTypeFromDB = async (
 	categoryType: string | ParsedQs | string[] | ParsedQs[] | undefined
 ) => {
-	console.log(categoryType);
 	const response = await connectToDatabase(async (db) => {
 		return await db.query(
 			`SELECT category_name, categories.id FROM categories 
