@@ -65,15 +65,22 @@ SELECT * FROM categories;
 
 SELECT * FROM categoriesandproducts;
 
+-- Users
+SELECT * FROM users;
+DROP TABLE users;
+CREATE TABLE users (
+	id SERIAL PRIMARY KEY,
+	name TEXT,
+	email TEXT,
+	password TEXT
+)
+
 INSERT INTO categoriesandproducts VALUES (1,10), (2,10), (3,10)
 INSERT INTO categoriesandproducts VALUES (1,9), (2,8), (3,7)
 
 SELECT * FROM categoriesandproducts
 JOIN categories ON categories.id = categoriesandproducts.category_id
-JOIN products ON products.id = categoriesandproducts.product_id
-WHERE categories.category_name = 'Kaland'
-
-SELECT category_name, categories.id FROM categories 
-JOIN categorytypes ON categories.category_type_id = categorytypes.id
-WHERE categorytypes.category_type_name = 'Rating PEGI (ajánlott korosztály)';
+JOIN products ON products.id = categoriesandproducts.product_id)
+WHERE category_name = 'Playstation 5' OR category_name = 'Akció/Kaland' OR category_name = 'Sport'
+ 
 

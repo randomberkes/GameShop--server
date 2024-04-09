@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import users from "./routes/userRoutes";
+import { usersGetAll, usersGetByEmail } from "./routes/userRoutes";
 import {
 	getAll,
 	getByName,
@@ -19,7 +19,8 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
-app.use("/users", users);
+app.use("/users", usersGetAll);
+app.use("/users", usersGetByEmail);
 
 app.use("/products", getAll);
 app.use("/products", getByName);

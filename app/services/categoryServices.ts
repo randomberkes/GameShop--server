@@ -8,7 +8,8 @@ export const getCategoriesByTypeFromDB = async (
 		return await db.query(
 			`SELECT category_name, categories.id FROM categories 
 			JOIN categorytypes ON categories.category_type_id = categorytypes.id
-			WHERE categorytypes.category_type_name = '${categoryType}'`
+			WHERE categorytypes.category_type_name = $1`,
+			[categoryType]
 		);
 	});
 	const allCategories = response.rows;

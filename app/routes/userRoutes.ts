@@ -1,6 +1,7 @@
 import express from "express";
-import { getUsers } from "../controllers/userControllers";
+import { getUserByEmail, getUsers } from "../controllers/userControllers";
 
 const router = express.Router();
 
-export default router.get("/api", getUsers);
+export const usersGetAll = router.get("/api", getUsers);
+export const usersGetByEmail = router.get("/email", getUserByEmail);

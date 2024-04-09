@@ -33,12 +33,12 @@ type Filter = {
 	number_of_players?: string[];
 };
 
-export const getProductsByFilterFromDB = async (filter: Filter) => {
+export const getProductsByFilterFromDB = async (filter: any) => {
 	let fullFilter = "";
 	let count = 0;
 	for (let key in filter) {
 		let oneColumnFilter = "";
-		for (let i = 0; i < filter[key as keyof typeof filter]!.length; i++) {
+		for (let i = 0; i < filter[key].length; i++) {
 			const oneFilter = ` ${key} = '${
 				filter[key as keyof typeof filter]![i]
 			}' `;
@@ -47,6 +47,7 @@ export const getProductsByFilterFromDB = async (filter: Filter) => {
 				oneColumnFilter += "OR";
 			}
 		}
+		oneColumnFilter = `(${oneColumnFilter})`;
 		if (count > 0) fullFilter += "AND";
 		fullFilter += oneColumnFilter;
 		oneColumnFilter = "";
@@ -54,6 +55,7 @@ export const getProductsByFilterFromDB = async (filter: Filter) => {
 	}
 
 	const select = "SELECT * FROM products WHERE" + fullFilter;
+	console.log(select);
 
 	const response = await connectToDatabase(async (db) => {
 		//prepare satemant

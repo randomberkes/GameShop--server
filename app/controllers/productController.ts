@@ -16,7 +16,11 @@ export const getProductsByName = async (req: Request, res: Response) => {
 };
 
 export const getProductsByFilter = async (req: Request, res: Response) => {
-	const products = await getProductsByFilterFromDB(req.body);
-	console.log(products);
+	let products;
+	if (!req.query.filter) {
+		products = await getAllProductsFromDB();
+	} else {
+		products = await getProductsByFilterFromDB(req.query.filter);
+	}
 	res.json(products);
 };
