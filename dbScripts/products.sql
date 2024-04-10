@@ -75,6 +75,8 @@ CREATE TABLE users (
 	password TEXT
 )
 
+INSERT INTO users(name, email, password) VALUES ('test1', 'test1@gmail.com', 'test1');
+
 INSERT INTO categoriesandproducts VALUES (1,10), (2,10), (3,10)
 INSERT INTO categoriesandproducts VALUES (1,9), (2,8), (3,7)
 
