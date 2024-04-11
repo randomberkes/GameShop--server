@@ -75,7 +75,9 @@ CREATE TABLE users (
 	password TEXT
 )
 
-INSERT INTO users(name, email, password) VALUES ('test1', 'test1@gmail.com', 'test1');
+INSERT INTO users(name, email, password) OUTPUT Inserted.name, Inserted.email, Inserted.password VALUES ('test1', 'test1@gmail.com', 'test1');
+UPDATE users SET refreshToken='135' WHERE email = 'test1@gmail.com'
+
 
 INSERT INTO categoriesandproducts VALUES (1,10), (2,10), (3,10)
 INSERT INTO categoriesandproducts VALUES (1,9), (2,8), (3,7)

@@ -1,12 +1,13 @@
 import express from "express";
+import verifyJWT from "../middleware/verifyJWT";
 import {
-	getUserByEmail,
-	getUsers,
-	postUser,
+	handleGetUsers,
+	handleGetUserByEmail,
 } from "../controllers/userControllers";
 
 const router = express.Router();
 
-export const usersGetAll = router.get("/api", getUsers);
-export const usersGetByEmail = router.get("/email", getUserByEmail);
-export const usersPost = router.post("/register", postUser);
+const getUsers = router.get("/all", verifyJWT, handleGetUsers);
+const getUsersByEmail = router.get("/email", handleGetUserByEmail);
+
+export { getUsers, getUsersByEmail };

@@ -1,6 +1,6 @@
 import connectToDatabase from "../../db";
 
-export const getAllUsersFromDB = async () => {
+const getAllUsersFromDB = async () => {
 	const response = await connectToDatabase(async (db) => {
 		return await db.query("SELECT * FROM users");
 	});
@@ -8,28 +8,55 @@ export const getAllUsersFromDB = async () => {
 	return allUsers;
 };
 
-export const getUserByEmailFromDB = async (email: any) => {
-	const response = await connectToDatabase(async (db) => {
-		return await db.query("SELECT * FROM users WHERE email=$1", [email]);
-	});
-	let user = "";
-	if (response.rows[0]) {
-		user = response.rows[0];
-	}
+const addNewUserToDB = async (userToSave: any) => {
+	const { name, email, hashedPassword } = userToSave;
 
-	return user;
-};
-
-export const postUserToDB = async (user: any) => {
-	const response = await connectToDatabase(async (db) => {
+	await connectToDatabase(async (db) => {
 		return await db.query(
 			"INSERT INTO users(name, email, password) VALUES ($1, $2, $3)",
-			[user.name, user.email, user.password]
+			[name, email, hashedPassword]
 		);
 	});
-	if (response.rows[0]) {
-		user = response.rows[0];
-	}
+};
+const getUserByEmailFromDB = async (email: any) => {
+	console.log(email);
+	const response = await connectToDatabase(async (db) => {
+		return await db.query("SELECT * FROM users WHERE email = $1", [email]);
+	});
 
-	return user;
+	return response.rows;
+};
+
+const getUserByRefreshTokenFromDB = async (refreshToken: string) => {
+	console.log(refreshToken);
+	const response = await connectToDatabase(async (db) => {
+		return await db.query("SELECT * FROM users WHERE refreshToken = $1", [
+			refreshToken,
+		]);
+	});
+
+	return response.rows;
+};
+
+const setUserRefreshToken = async (
+	email: string,
+	refreshToken: string | null
+) => {
+	console.log(email);
+	const response = await connectToDatabase(async (db) => {
+		return await db.query("UPDATE users SET refreshToken=$1 WHERE email = $2", [
+			refreshToken,
+			email,
+		]);
+	});
+
+	return response.rows;
+};
+
+export {
+	setUserRefreshToken,
+	getUserByRefreshTokenFromDB,
+	getUserByEmailFromDB,
+	addNewUserToDB,
+	getAllUsersFromDB,
 };

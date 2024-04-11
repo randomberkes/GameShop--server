@@ -1,21 +1,24 @@
 import {
 	getAllUsersFromDB,
 	getUserByEmailFromDB,
-	postUserToDB,
 } from "../services/userServices";
 import { Request, Response } from "express";
 
-export const getUsers = async (req: Request, res: Response) => {
+import "dotenv/config";
+
+const handleGetUsers = async (req: Request, res: Response) => {
 	const users = await getAllUsersFromDB();
 	res.json(users);
 };
 
-export const getUserByEmail = async (req: Request, res: Response) => {
-	const user = await getUserByEmailFromDB(req.query.email);
-	res.json(user);
+const handleGetUserByEmail = async (req: Request, res: Response) => {
+	const rows = await getUserByEmailFromDB(req.query.email);
+	console.log(rows);
+	if (rows.length === 0) {
+		return res.sendStatus(401);
+	}
+	const foundUser = rows[0];
+	res.json(foundUser);
 };
 
-export const postUser = async (req: Request, res: Response) => {
-	const user = await postUserToDB(req.body);
-	res.status(201).json(user);
-};
+export { handleGetUsers, handleGetUserByEmail };
