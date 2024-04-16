@@ -72,10 +72,11 @@ CREATE TABLE users (
 	id SERIAL PRIMARY KEY,
 	name TEXT,
 	email TEXT,
-	password TEXT
+	password TEXT,
+	refreshToken TEXT
 )
 
-INSERT INTO users(name, email, password) OUTPUT Inserted.name, Inserted.email, Inserted.password VALUES ('test1', 'test1@gmail.com', 'test1');
+INSERT INTO users(name, email, password)  VALUES ('test1', 'test1@gmail.com', 'test1');
 UPDATE users SET refreshToken='135' WHERE email = 'test1@gmail.com'
 
 

@@ -1,5 +1,7 @@
 import express from "express";
 import verifyJWT from "../middleware/verifyJWT";
+import verifyRole from "../middleware/verifyRole";
+import ROLES_LIST from "../config/roles_list";
 import {
 	handleGetUsers,
 	handleGetUserByEmail,
@@ -7,7 +9,12 @@ import {
 
 const router = express.Router();
 
-const getUsers = router.get("/all", verifyJWT, handleGetUsers);
+const getUsers = router.get(
+	"/all",
+	verifyJWT,
+	verifyRole(ROLES_LIST.Admin),
+	handleGetUsers
+);
 const getUsersByEmail = router.get("/email", handleGetUserByEmail);
 
 export { getUsers, getUsersByEmail };

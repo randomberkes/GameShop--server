@@ -55,7 +55,6 @@ export const getProductsByFilterFromDB = async (filter: any) => {
 	}
 
 	const select = "SELECT * FROM products WHERE" + fullFilter;
-	console.log(select);
 
 	const response = await connectToDatabase(async (db) => {
 		//prepare satemant

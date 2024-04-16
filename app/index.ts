@@ -16,6 +16,7 @@ import { login, logout, register, getAccessToken } from "./routes/authRoutes";
 const app = express();
 
 const corsOptions = {
+	credentials: true,
 	origin: "http://localhost:3000",
 };
 

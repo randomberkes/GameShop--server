@@ -13,7 +13,7 @@ const handleGetUsers = async (req: Request, res: Response) => {
 
 const handleGetUserByEmail = async (req: Request, res: Response) => {
 	const rows = await getUserByEmailFromDB(req.query.email);
-	console.log(rows);
+
 	if (rows.length === 0) {
 		return res.sendStatus(401);
 	}

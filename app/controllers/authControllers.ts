@@ -11,14 +11,13 @@ import "dotenv/config";
 
 const handleRefresToken = async (req: Request, res: Response) => {
 	const cookies = req.cookies;
+	console.log(cookies);
 	if (!cookies?.jwt) return res.sendStatus(401);
-	console.log(cookies.jwt);
 	const refreshToken = cookies.jwt;
 
 	const rows = await getUserByRefreshTokenFromDB(refreshToken);
-	if (rows.length < 0) return res.sendStatus(403);
+	if (rows.length < 1) return res.sendStatus(403);
 	const foundUser = rows[0];
-	console.log(foundUser);
 
 	jwt.verify(
 		refreshToken,
@@ -26,24 +25,30 @@ const handleRefresToken = async (req: Request, res: Response) => {
 		(err: any, decoded: any) => {
 			if (err || foundUser.name !== decoded.name) return res.sendStatus(403);
 			const accessToken = jwt.sign(
-				{ name: decoded.name },
+				{ UserInfo: { name: decoded.name, role: foundUser.role } },
 				process.env.ACCESS_TOKEN_SECRET!,
-				{ expiresIn: "5m" }
+				{ expiresIn: "15s" }
 			);
-			res.json({ accessToken });
+			res.json({
+				accessToken,
+				role: foundUser.role,
+				name: foundUser.name,
+				email: foundUser.email,
+			});
 		}
 	);
 };
 
 const handleLogout = async (req: Request, res: Response) => {
 	const cookies = req.cookies;
+	console.log(cookies);
 	if (!cookies?.jwt) return res.sendStatus(404); //OK, no content
 	const refreshToken = cookies.jwt;
 
 	// Is refreshToken in db ?
 	const rows = await getUserByRefreshTokenFromDB(refreshToken);
 	if (rows.length < 0) {
-		res.clearCookie("jwt", { httpOnly: true });
+		res.clearCookie("jwt", { httpOnly: true, sameSite: "none", secure: true });
 		return res.sendStatus(404); //OK, no content
 	}
 
@@ -68,6 +73,7 @@ const handleRegister = async (req: Request, res: Response) => {
 		const userToSave = {
 			name: name,
 			email: email,
+			role: "5456",
 			hashedPassword: hashedPassword,
 		};
 		await addNewUserToDB(userToSave);
@@ -86,25 +92,27 @@ const handleLogin = async (req: Request, res: Response) => {
 	const rows = await getUserByEmailFromDB(email);
 	if (rows.length < 0) return res.sendStatus(401);
 	const foundUser = rows[0];
-	console.log(foundUser);
+
 	const match = await bcrypt.compare(password, foundUser.password);
 	if (match) {
-		const accesToken = jwt.sign(
-			{ name: foundUser.name },
+		const accessToken = jwt.sign(
+			{ UserInfo: { name: foundUser.name, role: foundUser.role } },
 			process.env.ACCESS_TOKEN_SECRET!,
-			{ expiresIn: "5m" }
+			{ expiresIn: "15s" }
 		);
 		const refreshToken = jwt.sign(
 			{ name: foundUser.name },
 			process.env.REFRESH_TOKEN_SECRET!,
-			{ expiresIn: "1d" }
+			{ expiresIn: "5m" }
 		);
 		await setUserRefreshToken(foundUser.email, refreshToken);
 		res.cookie("jwt", refreshToken, {
 			httpOnly: true,
+			sameSite: "none",
+			secure: true,
 			maxAge: 24 * 60 * 60 * 1000,
 		});
-		res.json({ accesToken });
+		res.json({ accessToken, role: foundUser.role, name: foundUser.name });
 	} else {
 		res.sendStatus(401);
 	}

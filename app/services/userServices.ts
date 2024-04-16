@@ -19,7 +19,6 @@ const addNewUserToDB = async (userToSave: any) => {
 	});
 };
 const getUserByEmailFromDB = async (email: any) => {
-	console.log(email);
 	const response = await connectToDatabase(async (db) => {
 		return await db.query("SELECT * FROM users WHERE email = $1", [email]);
 	});
@@ -28,7 +27,6 @@ const getUserByEmailFromDB = async (email: any) => {
 };
 
 const getUserByRefreshTokenFromDB = async (refreshToken: string) => {
-	console.log(refreshToken);
 	const response = await connectToDatabase(async (db) => {
 		return await db.query("SELECT * FROM users WHERE refreshToken = $1", [
 			refreshToken,
@@ -42,7 +40,6 @@ const setUserRefreshToken = async (
 	email: string,
 	refreshToken: string | null
 ) => {
-	console.log(email);
 	const response = await connectToDatabase(async (db) => {
 		return await db.query("UPDATE users SET refreshToken=$1 WHERE email = $2", [
 			refreshToken,
