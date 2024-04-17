@@ -9,12 +9,12 @@ const getAllUsersFromDB = async () => {
 };
 
 const addNewUserToDB = async (userToSave: any) => {
-	const { name, email, hashedPassword } = userToSave;
+	const { name, email, hashedPassword, roles } = userToSave;
 
 	await connectToDatabase(async (db) => {
 		return await db.query(
-			"INSERT INTO users(name, email, password) VALUES ($1, $2, $3)",
-			[name, email, hashedPassword]
+			"INSERT INTO users(name, email, password, roles) VALUES ($1, $2, $3, $4)",
+			[name, email, hashedPassword, roles]
 		);
 	});
 };

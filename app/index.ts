@@ -12,6 +12,7 @@ import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 
 import { login, logout, register, getAccessToken } from "./routes/authRoutes";
+import { favoriteRouter } from "./routes/favoriteRoutes";
 
 const app = express();
 
@@ -25,6 +26,8 @@ app.use(bodyParser.json());
 
 //middleware for cookies
 app.use(cookieParser());
+
+app.use("/favorite", favoriteRouter);
 
 app.use("/auth", getAccessToken);
 app.use("/auth", login);

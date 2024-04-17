@@ -87,5 +87,18 @@ SELECT * FROM categoriesandproducts
 JOIN categories ON categories.id = categoriesandproducts.category_id
 JOIN products ON products.id = categoriesandproducts.product_id)
 WHERE category_name = 'Playstation 5' OR category_name = 'Akció/Kaland' OR category_name = 'Sport'
+
+--favorites
+SELECT * FROM favorites;
+
+CREATE TABLE favorites (
+	product_id INTEGER REFERENCES products(id),
+	user_id INTEGER REFERENCES users(id),
+	PRIMARY KEY (product_id, user_id)
+)
+
+INSERT INTO favorites VALUES (3, 14);
+
+DELETE FROM favorites WHERE products_id = 3 AND user_id = 14;
  
 

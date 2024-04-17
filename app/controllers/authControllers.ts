@@ -25,13 +25,13 @@ const handleRefresToken = async (req: Request, res: Response) => {
 		(err: any, decoded: any) => {
 			if (err || foundUser.name !== decoded.name) return res.sendStatus(403);
 			const accessToken = jwt.sign(
-				{ UserInfo: { name: decoded.name, role: foundUser.role } },
+				{ UserInfo: { name: decoded.name, roles: foundUser.roles } },
 				process.env.ACCESS_TOKEN_SECRET!,
 				{ expiresIn: "15s" }
 			);
 			res.json({
 				accessToken,
-				role: foundUser.role,
+				roles: foundUser.roles,
 				name: foundUser.name,
 				email: foundUser.email,
 			});
@@ -60,7 +60,8 @@ const handleLogout = async (req: Request, res: Response) => {
 };
 
 const handleRegister = async (req: Request, res: Response) => {
-	const { name, email, password } = req.body;
+	const { name, email, password, roles } = req.body;
+	console.log(roles);
 	if (!email || !password || !email)
 		return res
 			.status(400)
@@ -73,7 +74,7 @@ const handleRegister = async (req: Request, res: Response) => {
 		const userToSave = {
 			name: name,
 			email: email,
-			role: "5456",
+			roles: roles,
 			hashedPassword: hashedPassword,
 		};
 		await addNewUserToDB(userToSave);
@@ -96,7 +97,7 @@ const handleLogin = async (req: Request, res: Response) => {
 	const match = await bcrypt.compare(password, foundUser.password);
 	if (match) {
 		const accessToken = jwt.sign(
-			{ UserInfo: { name: foundUser.name, role: foundUser.role } },
+			{ UserInfo: { name: foundUser.name, roles: foundUser.roles } },
 			process.env.ACCESS_TOKEN_SECRET!,
 			{ expiresIn: "15s" }
 		);
@@ -112,7 +113,7 @@ const handleLogin = async (req: Request, res: Response) => {
 			secure: true,
 			maxAge: 24 * 60 * 60 * 1000,
 		});
-		res.json({ accessToken, role: foundUser.role, name: foundUser.name });
+		res.json({ accessToken, roles: foundUser.roles, name: foundUser.name });
 	} else {
 		res.sendStatus(401);
 	}
