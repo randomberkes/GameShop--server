@@ -25,7 +25,13 @@ const handleRefresToken = async (req: Request, res: Response) => {
 		(err: any, decoded: any) => {
 			if (err || foundUser.name !== decoded.name) return res.sendStatus(403);
 			const accessToken = jwt.sign(
-				{ UserInfo: { name: decoded.name, roles: foundUser.roles } },
+				{
+					UserInfo: {
+						name: decoded.name,
+						roles: foundUser.roles,
+						id: foundUser.id,
+					},
+				},
 				process.env.ACCESS_TOKEN_SECRET!,
 				{ expiresIn: "15s" }
 			);
@@ -97,7 +103,13 @@ const handleLogin = async (req: Request, res: Response) => {
 	const match = await bcrypt.compare(password, foundUser.password);
 	if (match) {
 		const accessToken = jwt.sign(
-			{ UserInfo: { name: foundUser.name, roles: foundUser.roles } },
+			{
+				UserInfo: {
+					name: foundUser.name,
+					roles: foundUser.roles,
+					id: foundUser.id,
+				},
+			},
 			process.env.ACCESS_TOKEN_SECRET!,
 			{ expiresIn: "15s" }
 		);
