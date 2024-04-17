@@ -17,8 +17,9 @@ const handleAddFavoritesLink = async (req: any, res: any) => {
 };
 
 const handleDeleteFavoritesLink = async (req: any, res: any) => {
-	const productID = req.body.productID;
+	const productID = req.query.productID;
 	const userID = req.id;
+
 	try {
 		await deleteFavoritesLinkFromDB(productID, userID);
 		res.sendStatus(204);

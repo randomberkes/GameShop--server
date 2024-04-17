@@ -99,6 +99,20 @@ CREATE TABLE favorites (
 
 INSERT INTO favorites VALUES (3, 14);
 
-DELETE FROM favorites WHERE products_id = 3 AND user_id = 14;
+DELETE FROM favorites WHERE product_id = 3 AND user_id = 14;
+
+SELECT products.* FROM favorites
+JOIN users ON users.id = favorites.user_id
+JOIN products ON products.id = favorites.product_id
+WHERE user_id = 14;
+
+--cart
+SELECT * FROM cart;
+
+CREATE TABLE cart (
+	product_id INTEGER REFERENCES products(id),
+	user_id INTEGER REFERENCES users(id),
+	PRIMARY KEY (product_id, user_id)
+)
  
 
