@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import {
 	addFavoritesLinkToDB,
 	deleteFavoritesLinkFromDB,
+	getFavoritesProductsByUserFromDB,
 } from "../services/favoriteServices";
 
 const handleAddFavoritesLink = async (req: any, res: any) => {
@@ -26,4 +27,18 @@ const handleDeleteFavoritesLink = async (req: any, res: any) => {
 	}
 };
 
-export { handleAddFavoritesLink, handleDeleteFavoritesLink };
+const handleGetFavoritesProductsByUser = async (req: any, res: any) => {
+	const userID = req.id;
+	try {
+		const products = await getFavoritesProductsByUserFromDB(userID);
+		res.status(200).json(products);
+	} catch (err) {
+		res.status(500).json({ message: err });
+	}
+};
+
+export {
+	handleAddFavoritesLink,
+	handleDeleteFavoritesLink,
+	handleGetFavoritesProductsByUser,
+};

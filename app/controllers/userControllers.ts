@@ -8,6 +8,7 @@ import "dotenv/config";
 
 const handleGetUsers = async (req: Request, res: Response) => {
 	const users = await getAllUsersFromDB();
+	console.log(users);
 	res.json(users);
 };
 

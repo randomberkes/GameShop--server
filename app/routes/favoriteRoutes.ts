@@ -2,6 +2,7 @@ import express from "express";
 import {
 	handleAddFavoritesLink,
 	handleDeleteFavoritesLink,
+	handleGetFavoritesProductsByUser,
 } from "../controllers/favoriteControllers";
 import verifyJWT from "../middleware/verifyJWT";
 import verifyRoles from "../middleware/verifyRoles";
@@ -20,6 +21,11 @@ favoriteRouter
 		verifyJWT,
 		verifyRoles(ROLES_LIST.Buyer, ROLES_LIST.Seller),
 		handleDeleteFavoritesLink
+	)
+	.get(
+		verifyJWT,
+		verifyRoles(ROLES_LIST.Buyer, ROLES_LIST.Seller),
+		handleGetFavoritesProductsByUser
 	);
 
 export { favoriteRouter };
