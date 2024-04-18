@@ -13,7 +13,8 @@ import cookieParser from "cookie-parser";
 
 import { login, logout, register, getAccessToken } from "./routes/authRoutes";
 import { favoriteRouter } from "./routes/favoriteRoutes";
-import { cartRouter } from "./routes/cartRoutes";
+import { cartRouter, decrement, increment } from "./routes/cartRoutes";
+import { orderRouter } from "./routes/orderRoutes";
 
 const app = express();
 
@@ -28,7 +29,11 @@ app.use(bodyParser.json());
 //middleware for cookies
 app.use(cookieParser());
 
+app.use("/order", orderRouter);
+
 app.use("/cart", cartRouter);
+app.use("/cart", increment);
+app.use("/cart", decrement);
 app.use("/favorite", favoriteRouter);
 
 app.use("/auth", getAccessToken);
