@@ -22,6 +22,14 @@ const deleteCartLinkFromDB = async (productID: number, userID: number) => {
 	return allUsers;
 };
 
+const deleteAllCartLinksByUserFromDB = async (userID: number) => {
+	const response = await connectToDatabase(async (db) => {
+		return await db.query("DELETE FROM cart WHERE user_id = $1;", [userID]);
+	});
+	const allUsers = response.rows;
+	return allUsers;
+};
+
 const getAmountOfCartLinkFromDB = async (productID: number, userID: number) => {
 	const response = await connectToDatabase(async (db) => {
 		return await db.query(
@@ -73,4 +81,5 @@ export {
 	incrementCartLinkFromDB,
 	decrementCartLinkFromDB,
 	getAmountOfCartLinkFromDB,
+	deleteAllCartLinksByUserFromDB,
 };

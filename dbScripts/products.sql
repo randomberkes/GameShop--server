@@ -114,5 +114,13 @@ CREATE TABLE cart (
 	user_id INTEGER REFERENCES users(id),
 	PRIMARY KEY (product_id, user_id)
 )
+
+--order
+
+SELECT * FROM orders
+JOIN users ON users.id = orders.user_id
+JOIN products ON products.id = order_items.product_id
+JOIN order_items ON orders.id = order_items.order_id
+WHERE orders.user_id = 14 
  
 

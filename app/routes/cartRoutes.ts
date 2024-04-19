@@ -13,6 +13,7 @@ import {
 
 const cartRouter = express.Router();
 const amountRouter = express.Router();
+// const deleteAllRouter = express.Router();
 
 cartRouter
 	.route("/")

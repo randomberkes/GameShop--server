@@ -1,6 +1,7 @@
 import {
 	addCartLinkToDB,
 	decrementCartLinkFromDB,
+	deleteAllCartLinksByUserFromDB,
 	deleteCartLinkFromDB,
 	getAmountOfCartLinkFromDB,
 	getCartProductsByUserFromDB,
@@ -29,6 +30,17 @@ const handleDeleteCartLink = async (req: any, res: any) => {
 		res.status(500).json({ message: err });
 	}
 };
+
+// const handleDeleteAllCartLinksByUser = async (req: any, res: any) => {
+// 	const userID = req.id;
+
+// 	try {
+// 		await deleteAllCartLinksByUserFromDB(userID);
+// 		res.sendStatus(204);
+// 	} catch (err) {
+// 		res.status(500).json({ message: err });
+// 	}
+// };
 
 const handleGetAmountOfCartLink = async (req: any, res: any) => {
 	const productID = req.query.productID;

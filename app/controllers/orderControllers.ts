@@ -1,4 +1,8 @@
 import {
+	deleteAllCartLinksByUserFromDB,
+	getCartProductsByUserFromDB,
+} from "../services/cartServices";
+import {
 	addNewOrderToDB,
 	addOrderItemLinkToDB,
 } from "../services/orderServices";
@@ -18,6 +22,7 @@ const handleAddOrder = async (req: any, res: any) => {
 				);
 			}
 		);
+		await deleteAllCartLinksByUserFromDB(userID);
 		res.sendStatus(201);
 	} catch (err) {
 		res.status(500).json({ message: err });
