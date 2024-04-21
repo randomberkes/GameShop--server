@@ -4,6 +4,7 @@ import { userRouter, getUsersByEmail } from "./routes/userRoutes";
 import {
 	getAll,
 	getByName,
+	getProductByID,
 	getProductsByFilterRouter,
 } from "./routes/productRoutes";
 import { getCategoryTypes } from "./routes/categoryTypeRoutes";
@@ -44,6 +45,7 @@ app.use("/auth", register);
 app.use("/user", userRouter);
 app.use("/users", getUsersByEmail);
 
+app.use("/products", getProductByID);
 app.use("/products", getAll);
 app.use("/products", getByName);
 app.use("/products", getProductsByFilterRouter);

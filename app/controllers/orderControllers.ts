@@ -10,6 +10,7 @@ import {
 const handleAddOrder = async (req: any, res: any) => {
 	const price = req.body.price;
 	const orderItems = req.body.orderItems;
+	console.log(orderItems);
 	const userID = req.id;
 	try {
 		const orderID = await addNewOrderToDB(price, userID);

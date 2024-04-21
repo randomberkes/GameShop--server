@@ -10,12 +10,7 @@ CREATE TABLE products (
 	description TEXT,
 	price TEXT
 )
-CREATE TABLE products (
-	id SERIAL PRIMARY KEY,
-	name TEXT,
-	description TEXT,
-	price TEXT
-)
+
 CREATE TABLE categoryTypes (
 	id SERIAL PRIMARY KEY,
 	category_type_name TEXT,
@@ -65,9 +60,24 @@ SELECT * FROM categories;
 
 SELECT * FROM categoriesandproducts;
 
+--Products
+
+SELECT * FROM products;
+SELECT * FROM users WHERE id = 1;
+CREATE TABLE products (
+	id SERIAL PRIMARY KEY,
+	name TEXT,
+	description TEXT,
+	price TEXT
+)
+
 -- Users
 SELECT * FROM users;
 SELECT * FROM users WHERE id = 14
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoicmFuZG9tIiwiaWF0IjoxNzEzNzAxNzU0LCJleHAiOjE3MTM3MDM1NTR9.49TUY7vZyuDcQRK9n1VskV0WkOd3Z7AE2_lJhNVZqOE
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoicmFuZG9tIiwiaWF0IjoxNzEzNzAxNzU0LCJleHAiOjE3MTM3MDM1NTR9.49TUY7vZyuDcQRK9n1VskV0WkOd3Z7AE2_lJhNVZqOE
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoicmFuZG9tIiwiaWF0IjoxNzEzNzAxNzU0LCJleHAiOjE3MTM3MDM1NTR9.49TUY7vZyuDcQRK9n1VskV0WkOd3Z7AE2_lJhNVZqOE
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoicmFuZG9tIiwiaWF0IjoxNzEzNzAxNzU0LCJleHAiOjE3MTM3MDM1NTR9.49TUY7vZyuDcQRK9n1VskV0WkOd3Z7AE2_lJhNVZqOE
 
 UPDATE users SET name = 'randi' email = 'randomberkes@gmail.com'  password = '$2b$10$XW/ETh2DRDPKkkJsEl1v6OjTZrl6cJ3ReVZNOzLhR09VV3mg6wq1W' WHERE id = 14;
 DROP TABLE users;
@@ -125,11 +135,43 @@ DELETE FROM cart WHERE user_id = 14;
 
 --order
 
-SELECT * FROM orders
+SELECT id FROM orders WHERE user_id = 14;
+SELECT * FROM order_items
+
+SELECT orders.id, products.name, order_items.amount,  products.img_path, products.price  FROM orders
 JOIN users ON users.id = orders.user_id
 JOIN order_items ON orders.id = order_items.order_id
 JOIN products ON products.id = order_items.product_id
 
-WHERE orders.user_id = 14; 
+WHERE orders.id = 21; 
+
+--activation key
+SELECT * FROM activation_keys;
+
+SELECT * FROM activation_keys WHERE product_id = 1;
+SELECT COUNT(*) FROM activation_keys WHERE user_id = 16 AND product_id = 2;
+SELECT * FROM activation_keys WHERE product_id = 1;
+
+SELECT  DISTINCT users.name, activation_keys.price FROM activation_keys
+JOIN users ON users.id = activation_keys.user_id WHERE activation_keys.product_id = 2;
+
+DROP TABLE activation_keys;
+
+CREATE TABLE activation_keys (
+	id SERIAL PRIMARY KEY,
+	product_id INTEGER REFERENCES products(id),
+	user_id INTEGER REFERENCES users(id),
+	price NUMERIC,
+	activation_key TEXT UNIQUE
+)
+
+INSERT INTO activation_keys (product_id, user_id, price, activation_key) VALUES (1, 16, 12000, '8228-9312-4655-2895');
+INSERT INTO activation_keys (product_id, user_id, price, activation_key) VALUES (1, 16, 12000, '7117-9361-9542-0662');
+
+INSERT INTO activation_keys (product_id, user_id, price, activation_key) VALUES (2, 15, 14000,'5238-9451-4733-4853');
+INSERT INTO activation_keys (product_id, user_id, price, activation_key) VALUES (2, 16, 15000,'9659-1825-8010-2537');
+INSERT INTO activation_keys (product_id, user_id, price, activation_key) VALUES (2, 16, 15000,'9159-0872-1757-3467');
+
+INSERT INTO activation_keys  (product_id, user_id, price, activation_key)VALUES (3, 14, 17000,'4997-3139-4949-1088');
  
 

@@ -9,6 +9,13 @@ export const getAllProductsFromDB = async () => {
 	return allProducts;
 };
 
+const getProductByIDFromDB = async (productID: any) => {
+	const response = await connectToDatabase(async (db) => {
+		return await db.query("SELECT * FROM products WHERE id = $1;", [productID]);
+	});
+	return response;
+};
+
 export const getProductsByNameFromDB = async (
 	productName: string | ParsedQs | string[] | ParsedQs[] | undefined
 ) => {
@@ -63,3 +70,5 @@ export const getProductsByFilterFromDB = async (filter: any) => {
 	const allProducts = response.rows;
 	return allProducts;
 };
+
+export { getProductByIDFromDB };

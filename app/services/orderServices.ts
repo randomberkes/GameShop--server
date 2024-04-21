@@ -11,6 +11,26 @@ const addNewOrderToDB = async (price: number, userID: number) => {
 	return orderID;
 };
 
+const getOrderNumbersByUserFromDB = async (userID: number) => {
+	const response = await connectToDatabase(async (db) => {
+		return await db.query("SELECT id FROM orders WHERE user_id = $1;", [
+			userID,
+		]);
+	});
+	const orderIDs = response;
+	return orderIDs;
+};
+
+const getOrderItemsByOrderFromDB = async (userID: number) => {
+	const response = await connectToDatabase(async (db) => {
+		return await db.query("SELECT id FROM orders WHERE user_id = $1;", [
+			userID,
+		]);
+	});
+	const orderIDs = response;
+	return orderIDs;
+};
+
 const addOrderItemLinkToDB = async (
 	orderID: number,
 	amount: number,
