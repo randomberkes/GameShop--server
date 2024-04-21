@@ -6,15 +6,12 @@ import {
 	handleGetProductByID,
 } from "../controllers/productController";
 
-const router = express.Router();
+const productsRouter = express.Router();
 
-const getProductByID = router.get("/:productID?", handleGetProductByID);
+productsRouter
+	.get("/asdsadasd", getProducts)
+	.get("/search", getProductsByName)
+	.get(":productID?", handleGetProductByID)
+	.get("/filter", getProductsByFilter);
 
-export const getAll = router.get("/", getProducts);
-export const getByName = router.get("/search", getProductsByName);
-export const getProductsByFilterRouter = router.get(
-	"/filter",
-	getProductsByFilter
-);
-
-export { getProductByID };
+export { productsRouter };

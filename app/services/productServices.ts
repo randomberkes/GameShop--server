@@ -62,11 +62,12 @@ export const getProductsByFilterFromDB = async (filter: any) => {
 	}
 
 	const select = "SELECT * FROM products WHERE" + fullFilter;
-
+	console.log(select);
 	const response = await connectToDatabase(async (db) => {
 		//prepare satemant
 		return await db.query(select);
 	});
+	console.log(response.rows);
 	const allProducts = response.rows;
 	return allProducts;
 };

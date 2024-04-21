@@ -1,12 +1,7 @@
 import express from "express";
 import cors from "cors";
 import { userRouter, getUsersByEmail } from "./routes/userRoutes";
-import {
-	getAll,
-	getByName,
-	getProductByID,
-	getProductsByFilterRouter,
-} from "./routes/productRoutes";
+import { productsRouter } from "./routes/productRoutes";
 import { getCategoryTypes } from "./routes/categoryTypeRoutes";
 import { getCategoriesByTypeRouter } from "./routes/categoryRoutes";
 import bodyParser from "body-parser";
@@ -16,6 +11,7 @@ import { login, logout, register, getAccessToken } from "./routes/authRoutes";
 import { favoriteRouter } from "./routes/favoriteRoutes";
 import { cartRouter, decrement, increment } from "./routes/cartRoutes";
 import { orderRouter } from "./routes/orderRoutes";
+import { offerRouter } from "./routes/offerRoutes";
 
 const app = express();
 
@@ -30,6 +26,7 @@ app.use(bodyParser.json());
 //middleware for cookies
 app.use(cookieParser());
 
+app.use("/offer", offerRouter);
 app.use("/order", orderRouter);
 
 app.use("/cart", cartRouter);
@@ -45,10 +42,7 @@ app.use("/auth", register);
 app.use("/user", userRouter);
 app.use("/users", getUsersByEmail);
 
-app.use("/products", getProductByID);
-app.use("/products", getAll);
-app.use("/products", getByName);
-app.use("/products", getProductsByFilterRouter);
+app.use("/products", productsRouter);
 
 app.use("/categoryTypes", getCategoryTypes);
 
