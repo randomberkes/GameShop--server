@@ -26,6 +26,28 @@ const getUserByEmailFromDB = async (email: any) => {
 	return response.rows;
 };
 
+const getUserByIdFromDB = async (id: any) => {
+	console.log(id);
+	const response = await connectToDatabase(async (db) => {
+		return await db.query("SELECT * FROM users WHERE id = $1", [id]);
+	});
+	console.log("HIIIIIIII");
+
+	return response;
+};
+
+const updateUserFromDB = async (id: any, name: any, email: any, pwd: any) => {
+	const response = await connectToDatabase(async (db) => {
+		return await db.query(
+			"UPDATE users SET name = $1, email = $2,  password = $3 WHERE id = $4;",
+			[name, email, pwd, id]
+		);
+	});
+	console.log("HIIIIIIII2");
+
+	return response.rows;
+};
+
 const getUserByRefreshTokenFromDB = async (refreshToken: string) => {
 	const response = await connectToDatabase(async (db) => {
 		return await db.query("SELECT * FROM users WHERE refreshToken = $1", [
@@ -56,4 +78,6 @@ export {
 	getUserByEmailFromDB,
 	addNewUserToDB,
 	getAllUsersFromDB,
+	updateUserFromDB,
+	getUserByIdFromDB,
 };

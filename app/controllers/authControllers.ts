@@ -23,7 +23,8 @@ const handleRefresToken = async (req: Request, res: Response) => {
 		refreshToken,
 		process.env.REFRESH_TOKEN_SECRET!,
 		(err: any, decoded: any) => {
-			if (err || foundUser.name !== decoded.name) return res.sendStatus(403);
+			if (err) return res.sendStatus(403);
+			// || foundUser.name !== decoded.name
 			const accessToken = jwt.sign(
 				{
 					UserInfo: {
@@ -33,7 +34,7 @@ const handleRefresToken = async (req: Request, res: Response) => {
 					},
 				},
 				process.env.ACCESS_TOKEN_SECRET!,
-				{ expiresIn: "15s" }
+				{ expiresIn: "5m" }
 			);
 			res.json({
 				accessToken,
@@ -97,7 +98,7 @@ const handleLogin = async (req: Request, res: Response) => {
 			.status(400)
 			.json({ message: "Email and Password are required. " });
 	const rows = await getUserByEmailFromDB(email);
-	if (rows.length < 0) return res.sendStatus(401);
+	if (rows.length < 1) return res.sendStatus(401);
 	const foundUser = rows[0];
 
 	const match = await bcrypt.compare(password, foundUser.password);
@@ -111,12 +112,12 @@ const handleLogin = async (req: Request, res: Response) => {
 				},
 			},
 			process.env.ACCESS_TOKEN_SECRET!,
-			{ expiresIn: "15s" }
+			{ expiresIn: "5m" }
 		);
 		const refreshToken = jwt.sign(
 			{ name: foundUser.name },
 			process.env.REFRESH_TOKEN_SECRET!,
-			{ expiresIn: "5m" }
+			{ expiresIn: "30m" }
 		);
 		await setUserRefreshToken(foundUser.email, refreshToken);
 		res.cookie("jwt", refreshToken, {

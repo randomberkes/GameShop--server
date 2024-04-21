@@ -5,16 +5,17 @@ import ROLES_LIST from "../config/roles_list";
 import {
 	handleGetUsers,
 	handleGetUserByEmail,
+	handleUpdateUser,
 } from "../controllers/userControllers";
 
+const userRouter = express.Router();
 const router = express.Router();
 
-const getUsers = router.get(
-	"/all",
-	verifyJWT,
-	verifyRole(ROLES_LIST.Buyer),
-	handleGetUsers
-);
+userRouter
+	.route("/")
+	.get(verifyJWT, verifyRole(ROLES_LIST.Buyer), handleGetUsers)
+	.put(verifyJWT, verifyRole(ROLES_LIST.Buyer), handleUpdateUser);
+
 const getUsersByEmail = router.get("/email", handleGetUserByEmail);
 
-export { getUsers, getUsersByEmail };
+export { userRouter, getUsersByEmail };

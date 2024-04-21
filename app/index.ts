@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { getUsers, getUsersByEmail } from "./routes/userRoutes";
+import { userRouter, getUsersByEmail } from "./routes/userRoutes";
 import {
 	getAll,
 	getByName,
@@ -41,7 +41,7 @@ app.use("/auth", login);
 app.use("/auth", logout);
 app.use("/auth", register);
 
-app.use("/users", getUsers);
+app.use("/user", userRouter);
 app.use("/users", getUsersByEmail);
 
 app.use("/products", getAll);

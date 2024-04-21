@@ -67,6 +67,9 @@ SELECT * FROM categoriesandproducts;
 
 -- Users
 SELECT * FROM users;
+SELECT * FROM users WHERE id = 14
+
+UPDATE users SET name = 'randi' email = 'randomberkes@gmail.com'  password = '$2b$10$XW/ETh2DRDPKkkJsEl1v6OjTZrl6cJ3ReVZNOzLhR09VV3mg6wq1W' WHERE id = 14;
 DROP TABLE users;
 CREATE TABLE users (
 	id SERIAL PRIMARY KEY,
@@ -75,6 +78,10 @@ CREATE TABLE users (
 	password TEXT,
 	refreshToken TEXT
 )
+
+UPDATE users
+SET name = 'randi'
+WHERE id=14;
 
 INSERT INTO users(name, email, password)  VALUES ('test1', 'test1@gmail.com', 'test1');
 UPDATE users SET refreshToken='135' WHERE email = 'test1@gmail.com'
@@ -114,13 +121,15 @@ CREATE TABLE cart (
 	user_id INTEGER REFERENCES users(id),
 	PRIMARY KEY (product_id, user_id)
 )
+DELETE FROM cart WHERE user_id = 14;
 
 --order
 
 SELECT * FROM orders
 JOIN users ON users.id = orders.user_id
-JOIN products ON products.id = order_items.product_id
 JOIN order_items ON orders.id = order_items.order_id
-WHERE orders.user_id = 14 
+JOIN products ON products.id = order_items.product_id
+
+WHERE orders.user_id = 14; 
  
 
