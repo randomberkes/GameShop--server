@@ -25,9 +25,9 @@ const handleUpdateUser = async (req: any, res: any) => {
 
 	try {
 		const response = await getUserByIdFromDB(userID);
-		// if (response.rows.length < 1) return res.sendStatus(403);
+
 		const user = response.rows[0];
-		console.log(user);
+
 		const updateUser = {
 			name: name === "" ? user.name : name,
 			email: email === "" ? user.email : email,
@@ -49,7 +49,6 @@ const handleUpdateUser = async (req: any, res: any) => {
 
 const handleGetUserByEmail = async (req: Request, res: Response) => {
 	const rows = await getUserByEmailFromDB(req.query.email);
-
 	if (rows.length === 0) {
 		return res.sendStatus(401);
 	}

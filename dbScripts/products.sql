@@ -63,7 +63,9 @@ SELECT * FROM categoriesandproducts;
 --Products
 
 SELECT * FROM products;
-SELECT * FROM users WHERE id = 1;
+
+SELECT * FROM products WHERE id = 1;
+
 CREATE TABLE products (
 	id SERIAL PRIMARY KEY,
 	name TEXT,

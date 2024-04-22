@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { userRouter, getUsersByEmail } from "./routes/userRoutes";
+import { userRouter } from "./routes/userRoutes";
 import { productsRouter } from "./routes/productRoutes";
 import { getCategoryTypes } from "./routes/categoryTypeRoutes";
 import { getCategoriesByTypeRouter } from "./routes/categoryRoutes";
@@ -40,7 +40,6 @@ app.use("/auth", logout);
 app.use("/auth", register);
 
 app.use("/user", userRouter);
-app.use("/users", getUsersByEmail);
 
 app.use("/products", productsRouter);
 

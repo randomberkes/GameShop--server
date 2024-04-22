@@ -9,13 +9,12 @@ import {
 } from "../controllers/userControllers";
 
 const userRouter = express.Router();
-const router = express.Router();
+// const router = express.Router();
 
 userRouter
+	.get(":email?", handleGetUserByEmail)
 	.route("/")
 	.get(verifyJWT, verifyRole(ROLES_LIST.Buyer), handleGetUsers)
 	.put(verifyJWT, verifyRole(ROLES_LIST.Buyer), handleUpdateUser);
 
-const getUsersByEmail = router.get("/email", handleGetUserByEmail);
-
-export { userRouter, getUsersByEmail };
+export { userRouter };
