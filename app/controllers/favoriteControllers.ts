@@ -6,10 +6,10 @@ import {
 } from "../services/favoriteServices";
 
 const handleAddFavoritesLink = async (req: any, res: any) => {
-	const productID = req.body.productID;
+	const offerID = req.body.offerID;
 	const userID = req.id;
 	try {
-		await addFavoritesLinkToDB(productID, userID);
+		await addFavoritesLinkToDB(offerID, userID);
 		res.sendStatus(201);
 	} catch (err) {
 		res.status(500).json({ message: err });
@@ -17,11 +17,11 @@ const handleAddFavoritesLink = async (req: any, res: any) => {
 };
 
 const handleDeleteFavoritesLink = async (req: any, res: any) => {
-	const productID = req.query.productID;
+	const offerID = req.query.offerID;
 	const userID = req.id;
 
 	try {
-		await deleteFavoritesLinkFromDB(productID, userID);
+		await deleteFavoritesLinkFromDB(offerID, userID);
 		res.sendStatus(204);
 	} catch (err) {
 		res.status(500).json({ message: err });

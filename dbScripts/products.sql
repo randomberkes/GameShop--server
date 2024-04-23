@@ -108,37 +108,65 @@ JOIN products ON products.id = categoriesandproducts.product_id)
 WHERE category_name = 'Playstation 5' OR category_name = 'Akció/Kaland' OR category_name = 'Sport'
 
 --favorites
+DROP TABLE favorites;
 SELECT * FROM favorites;
 
 CREATE TABLE favorites (
-	product_id INTEGER REFERENCES products(id),
 	user_id INTEGER REFERENCES users(id),
-	PRIMARY KEY (product_id, user_id)
+	offer_id INTEGER REFERENCES offers(id),
+	PRIMARY KEY (offer_id, user_id)
 )
 
 INSERT INTO favorites VALUES (3, 14);
 
 DELETE FROM favorites WHERE product_id = 3 AND user_id = 14;
 
-SELECT products.* FROM favorites
-JOIN users ON users.id = favorites.user_id
-JOIN products ON products.id = favorites.product_id
-WHERE user_id = 14;
+SELECT users.name as username, products.*, offers.price, offers.id as offerID FROM favorites
+JOIN offers ON offers.id = favorites.offer_id
+JOIN users ON users.id = offers.user_id
+JOIN products ON products.id = offers.product_id
+WHERE favorites.user_id = 14
 
 --cart
+DROP TABLE cart;
 SELECT * FROM cart;
-
+INSERT INTO cart VALUES (1, 16, '8228-9312-4655-2895');
 CREATE TABLE cart (
-	product_id INTEGER REFERENCES products(id),
 	user_id INTEGER REFERENCES users(id),
-	PRIMARY KEY (product_id, user_id)
+	offer_id INTEGER REFERENCES offers(id),
+	amount INTEGER,
+	PRIMARY KEY (offer_id, user_id)
 )
+INSERT INTO cart VALUES (14, 1, 3);
+INSERT INTO cart VALUES (14, 2, 1);
+INSERT INTO cart VALUES (14, 3, 2);
+
+INSERT INTO cart VALUES (16, 4, 2);
+
+
+DELETE FROM cart WHERE user_id = 14 AND price_id = 2;
+
 DELETE FROM cart WHERE user_id = 14;
+
+UPDATE cart SET amount=amount+1  WHERE offer_id = 3 AND user_id = 14 RETURNING amount;
+
+SELECT users.name, products.*, offers.price, offers.id as offerID, cart.amount  FROM cart
+JOIN offers ON offers.id = cart.offer_id
+JOIN users ON users.id = offers.user_id
+JOIN products ON products.id = offers.product_id
+WHERE cart.user_id = 14
 
 --order
 
-SELECT id FROM orders WHERE user_id = 14;
+SELECT * FROM orders WHERE user_id = 14;
 SELECT * FROM order_items
+DROP TABLE order_items;
+
+CREATE TABLE order_items (
+	order_id  INTEGER REFERENCES orders(id),
+	offer_id INTEGER REFERENCES offers(id),
+	UNIQUE (order_id, offer_id)
+)
 
 SELECT orders.id, products.name, order_items.amount,  products.img_path, products.price  FROM orders
 JOIN users ON users.id = orders.user_id
@@ -149,31 +177,56 @@ WHERE orders.id = 21;
 
 --activation key
 SELECT * FROM activation_keys;
+DROP TABLE activation_keys;
 
 SELECT * FROM activation_keys WHERE product_id = 1;
 SELECT COUNT(*) FROM activation_keys WHERE user_id = 16 AND product_id = 2;
 SELECT * FROM activation_keys WHERE product_id = 1;
 
-SELECT  DISTINCT users.name, activation_keys.price FROM activation_keys
-JOIN users ON users.id = activation_keys.user_id WHERE activation_keys.product_id = 2;
+SELECT  DISTINCT users.name,prices.price FROM users
+JOIN prices ON prices.user_id = users.id 
+WHERE prices.product_id = 2;
 
 DROP TABLE activation_keys;
 
 CREATE TABLE activation_keys (
 	id SERIAL PRIMARY KEY,
-	product_id INTEGER REFERENCES products(id),
-	user_id INTEGER REFERENCES users(id),
-	price NUMERIC,
+	offer_id INTEGER REFERENCES offers(id),
 	activation_key TEXT UNIQUE
 )
 
-INSERT INTO activation_keys (product_id, user_id, price, activation_key) VALUES (1, 16, 12000, '8228-9312-4655-2895');
-INSERT INTO activation_keys (product_id, user_id, price, activation_key) VALUES (1, 16, 12000, '7117-9361-9542-0662');
+SELECT *  FROM cart
+JOIN offers ON cart.offer_id = offers.id
+JOIN activation_keys ON activation_keys.offer_id = offers.id
+WHERE cart.user_id = 14 AND offers.id = 1;
 
-INSERT INTO activation_keys (product_id, user_id, price, activation_key) VALUES (2, 15, 14000,'5238-9451-4733-4853');
-INSERT INTO activation_keys (product_id, user_id, price, activation_key) VALUES (2, 16, 15000,'9659-1825-8010-2537');
-INSERT INTO activation_keys (product_id, user_id, price, activation_key) VALUES (2, 16, 15000,'9159-0872-1757-3467');
 
-INSERT INTO activation_keys  (product_id, user_id, price, activation_key)VALUES (3, 14, 17000,'4997-3139-4949-1088');
- 
+INSERT INTO activation_keys (offer_id, activation_key) VALUES (2, '8228-9312-4655-2895');
+INSERT INTO activation_keys (offer_id, activation_key) VALUES (2, '7117-9361-9542-0662');
+
+INSERT INTO activation_keys (offer_id, activation_key) VALUES (3,'5238-9451-4733-4853');
+INSERT INTO activation_keys (offer_id, activation_key) VALUES (1,'9659-1825-8010-2537');
+INSERT INTO activation_keys (offer_id, activation_key) VALUES (1,'9159-0872-1757-3467');
+
+INSERT INTO activation_keys  (offer_id, activation_key)VALUES (4,'4997-3139-4949-1088');
+
+--offers
+SELECT * FROM offers ;
+DROP TABLE prices;
+CREATE TABLE offers (
+	id SERIAL PRIMARY KEY,
+	product_id  INTEGER REFERENCES products(id),
+	user_id INTEGER REFERENCES users(id),
+	price NUMERIC,
+	UNIQUE (product_id, user_id)
+)
+--getOffersFromDB
+SELECT users.name,offers.price, offers.id FROM users 
+JOIN offers ON offers.user_id = users.id 
+WHERE offers.product_id = $1;
+
+INSERT INTO offers (product_id, user_id, price) VALUES (2, 16, 15000);
+INSERT INTO offers (product_id, user_id, price) VALUES (1, 16, 12000);
+INSERT INTO offers (product_id, user_id, price) VALUES (2, 15, 14000);
+INSERT INTO offers (product_id, user_id, price) VALUES (3, 14, 17000);
 

@@ -6,8 +6,8 @@ import {
 	handleAddCartLink,
 	handleDecrementCartLink,
 	handleDeleteCartLink,
-	handleGetAmountOfCartLink,
-	handleGetCartProductsByUser,
+	// handleGetAmountOfCartLink,
+	handleGetCartOffersByUser,
 	handleIncrementCartLink,
 } from "../controllers/cartControllers";
 
@@ -30,7 +30,7 @@ cartRouter
 	.get(
 		verifyJWT,
 		verifyRoles(ROLES_LIST.Buyer, ROLES_LIST.Seller),
-		handleGetCartProductsByUser
+		handleGetCartOffersByUser
 	);
 
 const increment = amountRouter.get(
@@ -46,11 +46,11 @@ const decrement = amountRouter.get(
 	handleDecrementCartLink
 );
 
-const amount = amountRouter.get(
-	"/amount",
-	verifyJWT,
-	verifyRoles(ROLES_LIST.Buyer, ROLES_LIST.Seller),
-	handleGetAmountOfCartLink
-);
+// const amount = amountRouter.get(
+// 	"/amount",
+// 	verifyJWT,
+// 	verifyRoles(ROLES_LIST.Buyer, ROLES_LIST.Seller),
+// 	handleGetAmountOfCartLink
+// );
 
 export { cartRouter, increment, decrement };

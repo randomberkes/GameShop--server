@@ -1,7 +1,4 @@
-import {
-	deleteAllCartLinksByUserFromDB,
-	getCartProductsByUserFromDB,
-} from "../services/cartServices";
+import { deleteAllCartLinksByUserFromDB } from "../services/cartServices";
 import {
 	addNewOrderToDB,
 	addOrderItemLinkToDB,

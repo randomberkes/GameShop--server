@@ -3,16 +3,17 @@ import {
 	decrementCartLinkFromDB,
 	deleteAllCartLinksByUserFromDB,
 	deleteCartLinkFromDB,
-	getAmountOfCartLinkFromDB,
-	getCartProductsByUserFromDB,
+	// getAmountOfCartLinkFromDB,
+	getCartOffersByUserFromDB,
+	getMaxAmountOfCartLinkFromDB,
 	incrementCartLinkFromDB,
 } from "../services/cartServices";
 
 const handleAddCartLink = async (req: any, res: any) => {
-	const productID = req.body.productID;
+	const offerID = req.body.offerID;
 	const userID = req.id;
 	try {
-		await addCartLinkToDB(productID, userID);
+		await addCartLinkToDB(userID, offerID);
 		res.sendStatus(201);
 	} catch (err) {
 		res.status(500).json({ message: err });
@@ -20,12 +21,23 @@ const handleAddCartLink = async (req: any, res: any) => {
 };
 
 const handleDeleteCartLink = async (req: any, res: any) => {
-	const productID = req.query.productID;
+	const offerID = req.query.offerID;
+	console.log(offerID);
 	const userID = req.id;
 
 	try {
-		await deleteCartLinkFromDB(productID, userID);
+		await deleteCartLinkFromDB(offerID, userID);
 		res.sendStatus(204);
+	} catch (err) {
+		res.status(500).json({ message: err });
+	}
+};
+
+const handleGetCartOffersByUser = async (req: any, res: any) => {
+	const userID = req.id;
+	try {
+		const products = await getCartOffersByUserFromDB(userID);
+		res.status(200).json(products);
 	} catch (err) {
 		res.status(500).json({ message: err });
 	}
@@ -42,12 +54,12 @@ const handleDeleteCartLink = async (req: any, res: any) => {
 // 	}
 // };
 
-const handleGetAmountOfCartLink = async (req: any, res: any) => {
-	const productID = req.query.productID;
+const handleGetMaxAmountOfCartLink = async (req: any, res: any) => {
+	const offerID = req.query.offerID;
 	const userID = req.id;
 
 	try {
-		const rows = await getAmountOfCartLinkFromDB(productID, userID);
+		const rows = await getMaxAmountOfCartLinkFromDB(offerID, userID);
 		res.status(200).json(rows[0]);
 	} catch (err) {
 		res.status(500).json({ message: err });
@@ -55,36 +67,24 @@ const handleGetAmountOfCartLink = async (req: any, res: any) => {
 };
 
 const handleIncrementCartLink = async (req: any, res: any) => {
-	const productID = req.query.productID;
+	const offerID = req.query.offerID;
 	const userID = req.id;
 	console.log(req.query);
 	try {
-		console.log("HIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII");
-
-		await incrementCartLinkFromDB(productID, userID);
-		res.sendStatus(204);
+		const amount = await incrementCartLinkFromDB(offerID, userID);
+		console.log(amount);
+		res.status(202).json(amount);
 	} catch (err) {
 		res.status(500).json({ message: err });
 	}
 };
 
 const handleDecrementCartLink = async (req: any, res: any) => {
-	const productID = req.query.productID;
-	const userID = req.id;
-
-	try {
-		await decrementCartLinkFromDB(productID, userID);
-		res.sendStatus(204);
-	} catch (err) {
-		res.status(500).json({ message: err });
-	}
-};
-
-const handleGetCartProductsByUser = async (req: any, res: any) => {
+	const offerID = req.query.offerID;
 	const userID = req.id;
 	try {
-		const products = await getCartProductsByUserFromDB(userID);
-		res.status(200).json(products);
+		const amount = await decrementCartLinkFromDB(offerID, userID);
+		res.status(202).json(amount);
 	} catch (err) {
 		res.status(500).json({ message: err });
 	}
@@ -93,8 +93,8 @@ const handleGetCartProductsByUser = async (req: any, res: any) => {
 export {
 	handleAddCartLink,
 	handleDeleteCartLink,
-	handleGetCartProductsByUser,
+	handleGetCartOffersByUser,
 	handleIncrementCartLink,
 	handleDecrementCartLink,
-	handleGetAmountOfCartLink,
+	handleGetMaxAmountOfCartLink,
 };

@@ -1,4 +1,7 @@
-import { getOffersFromDB } from "../services/offerServices";
+import {
+	getOfferActivatinKeyNumberFromDB,
+	getOffersFromDB,
+} from "../services/offerServices";
 
 const handlegetOffers = async (req: any, res: any) => {
 	const orderID = req.query.productID;
@@ -12,4 +15,15 @@ const handlegetOffers = async (req: any, res: any) => {
 	}
 };
 
-export { handlegetOffers };
+const handleGetOfferActivatinKeyNumber = async (req: any, res: any) => {
+	const offerID = req.query.offerID;
+
+	try {
+		const activationKeyNumber = await getOfferActivatinKeyNumberFromDB(offerID);
+		res.status(200).json(activationKeyNumber);
+	} catch (err) {
+		res.status(500).json({ message: err });
+	}
+};
+
+export { handlegetOffers, handleGetOfferActivatinKeyNumber };

@@ -43,8 +43,6 @@ const updateUserFromDB = async (id: any, name: any, email: any, pwd: any) => {
 			[name, email, pwd, id]
 		);
 	});
-	console.log("HIIIIIIII2");
-
 	return response.rows;
 };
 

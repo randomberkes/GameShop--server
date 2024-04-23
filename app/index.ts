@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { userRouter } from "./routes/userRoutes";
+import { userRouter, getUsersByEmail } from "./routes/userRoutes";
 import { productsRouter } from "./routes/productRoutes";
 import { getCategoryTypes } from "./routes/categoryTypeRoutes";
 import { getCategoriesByTypeRouter } from "./routes/categoryRoutes";
@@ -32,6 +32,7 @@ app.use("/order", orderRouter);
 app.use("/cart", cartRouter);
 app.use("/cart", increment);
 app.use("/cart", decrement);
+
 app.use("/favorite", favoriteRouter);
 
 app.use("/auth", getAccessToken);
@@ -40,6 +41,7 @@ app.use("/auth", logout);
 app.use("/auth", register);
 
 app.use("/user", userRouter);
+app.use("/users", getUsersByEmail);
 
 app.use("/products", productsRouter);
 
