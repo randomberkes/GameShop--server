@@ -12,6 +12,7 @@ import { favoriteRouter } from "./routes/favoriteRoutes";
 import { cartRouter, decrement, increment } from "./routes/cartRoutes";
 import { orderRouter } from "./routes/orderRoutes";
 import { offerRouter } from "./routes/offerRoutes";
+import { activationKeyRouter } from "./routes/activationKeyRoutes";
 
 const app = express();
 
@@ -25,6 +26,8 @@ app.use(bodyParser.json());
 
 //middleware for cookies
 app.use(cookieParser());
+
+app.use("/activationKey", activationKeyRouter);
 
 app.use("/offer", offerRouter);
 app.use("/order", orderRouter);

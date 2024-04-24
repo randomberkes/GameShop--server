@@ -62,12 +62,12 @@ const getOnerLinkByUserAndProduct = async (
 
 const getOrderIDsByUserFromDB = async (userID: number) => {
 	const respone = await connectToDatabase(async (db) => {
-		return await db.query("SELECT id FROM orders WHERE user_id = $1;", [
+		return await db.query("SELECT id, price FROM orders WHERE user_id = $1;", [
 			userID,
 		]);
 	});
 	const onerLinkID = respone.rows.map((row: any) => {
-		return row.id;
+		return { id: row.id, price: row.price };
 	});
 	return onerLinkID;
 };
