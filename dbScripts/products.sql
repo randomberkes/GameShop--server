@@ -158,23 +158,30 @@ WHERE cart.user_id = 14
 
 --order
 
-SELECT * FROM orders WHERE user_id = 14;
-SELECT * FROM order_items
+SELECT id FROM orders WHERE user_id = 14;
+SELECT * FROM order_items WHERE order_id = 29
 DROP TABLE order_items;
 
 CREATE TABLE order_items (
 	order_id  INTEGER REFERENCES orders(id),
 	offer_id INTEGER REFERENCES offers(id),
 	amount INTEGER,
-	UNIQUE (order_id, offer_id)
+	PRIMARY KEY(order_id, offer_id)
 )
 
-SELECT orders.id, products.name, order_items.amount,  products.img_path, products.price  FROM orders
-JOIN users ON users.id = orders.user_id
-JOIN order_items ON orders.id = order_items.order_id
-JOIN products ON products.id = order_items.product_id
+alter table order_items
+drop constraint order_items_order_id_fkey,
+add constraint order_items_order_id_fkey
+   foreign key (order_id)
+   references orders(id)
+   on delete cascade;
 
-WHERE orders.id = 21; 
+SELECT orders.id, products.name, order_items.amount, orders.price  FROM orders
+JOIN order_items ON orders.id = order_items.order_id
+JOIN offers ON offers.id = order_items.offer_id 
+JOIN products ON products.id = offers.product_id
+
+WHERE orders.id = 28; 
 
 --activation key
 SELECT * FROM activation_keys;
@@ -206,14 +213,19 @@ JOIN activation_keys ON activation_keys.offer_id = offers.id
 WHERE offers.id = 1;
 
 
-INSERT INTO activation_keys (offer_id, activation_key) VALUES (2, '8228-9312-4655-2895');
-INSERT INTO activation_keys (offer_id, activation_key) VALUES (2, '7117-9361-9542-0662');
+INSERT INTO activation_keys (offer_id, activation_key) VALUES (2, '6301-6660-7969-2810');
+INSERT INTO activation_keys (offer_id, activation_key) VALUES (2, '7735-3046-5926-4531');
 
-INSERT INTO activation_keys (offer_id, activation_key) VALUES (3,'5238-9451-4733-4853');
-INSERT INTO activation_keys (offer_id, activation_key) VALUES (1,'9659-1825-8010-2537');
-INSERT INTO activation_keys (offer_id, activation_key) VALUES (1,'9159-0872-1757-3467');
+INSERT INTO activation_keys (offer_id, activation_key) VALUES (3,'5926-0504-5077-6160');
+INSERT INTO activation_keys (offer_id, activation_key) VALUES (1,'6677-4589-5791-6205');
+INSERT INTO activation_keys (offer_id, activation_key) VALUES (1,'3384-9446-2064-9365');
 
-INSERT INTO activation_keys  (offer_id, activation_key)VALUES (4,'4997-3459-4949-1088');
+INSERT INTO activation_keys  (offer_id, activation_key)VALUES (4,'8801-9761-8442-6430');
+
+
+
+
+
 
 --offers
 SELECT * FROM offers ;
@@ -235,9 +247,14 @@ INSERT INTO offers (product_id, user_id, price) VALUES (1, 16, 12000);
 INSERT INTO offers (product_id, user_id, price) VALUES (2, 15, 14000);
 INSERT INTO offers (product_id, user_id, price) VALUES (3, 14, 17000);
 
-UPDATE activation_keys SET offer_id=null, owner_id=1 WHERE offer_id=4; 
+UPDATE activation_keys SET offer_id=null, owner_id=1 WHERE offer_id=4, id=1; 
+
+SELECT id from activation_keys WHERE offer_id=2; 
 
 --own
+
+SELECT id FROM owners WHERE user_id = 14;
+SELECT * FROM owners
 CREATE TABLE owners (
 	id SERIAL PRIMARY KEY,
 	product_id  INTEGER REFERENCES products(id),
@@ -245,5 +262,9 @@ CREATE TABLE owners (
 	UNIQUE (product_id, user_id)
 )
 
-INSERT INTO owners (product_id, user_id) VALUES (3, 14);
+SELECT activation_keys.* FROM owners
+JOIN activation_keys ON activation_keys.owner_id = owners.id
+WHERE owners.user_id = 14;
+
+INSERT INTO owners (product_id, user_id) VALUES (2, 14);
 

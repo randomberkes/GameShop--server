@@ -72,6 +72,21 @@ const getOrderIDsByUserFromDB = async (userID: number) => {
 	return onerLinkID;
 };
 
+const getOrderItemIDsByOrderFromDB = async (orderID: number) => {
+	const respone = await connectToDatabase(async (db) => {
+		return await db.query(
+			"SELECT order_items.amount, users.name, offers.price, offers.product_id FROM order_items JOIN offers ON offers.id = order_items.offer_id JOIN users ON users.id = offers.user_id WHERE order_id = $1",
+			[orderID]
+		);
+	});
+	const orderItems = respone.rows.map((row: any) => {
+		const orderItem = { ...row, productID: row.product_id };
+		delete orderItem.product_id;
+		return orderItem;
+	});
+	return orderItems;
+};
+
 const addOrderItemLinkToDB = async (
 	offerID: number,
 	orderID: number,
@@ -93,4 +108,5 @@ export {
 	addNewOnerLinkToDB,
 	getOnerLinkByUserAndProduct,
 	getOrderIDsByUserFromDB,
+	getOrderItemIDsByOrderFromDB,
 };
