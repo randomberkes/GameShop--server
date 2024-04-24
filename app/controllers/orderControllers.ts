@@ -1,7 +1,11 @@
 import { deleteAllCartLinksByUserFromDB } from "../services/cartServices";
 import {
+	addNewOnerLinkToDB,
 	addNewOrderToDB,
 	addOrderItemLinkToDB,
+	getActivationKeyIDsByOfferIDFromDB,
+	getOnerLinkByUserAndProduct,
+	transferActivationTokenOwnership,
 } from "../services/orderServices";
 
 const handleAddOrder = async (req: any, res: any) => {
@@ -12,14 +16,51 @@ const handleAddOrder = async (req: any, res: any) => {
 	try {
 		const orderID = await addNewOrderToDB(price, userID);
 		orderItems.forEach(
-			async (orderItem: { amount: number; productID: number }) => {
-				await addOrderItemLinkToDB(
-					orderID,
-					orderItem.amount,
-					orderItem.productID
-				);
+			async (orderItem: {
+				amount: number;
+				offerID: number;
+				productID: number;
+			}) => {
+				try {
+					await addNewOnerLinkToDB(orderItem.productID, userID);
+				} catch (err) {
+					console.log(err);
+				}
 			}
 		);
+
+		orderItems.forEach(
+			async (orderItem: {
+				amount: number;
+				offerID: number;
+				productID: number;
+			}) => {
+				await addOrderItemLinkToDB(
+					orderItem.offerID,
+					orderID,
+					orderItem.amount
+				);
+				const activationKeyIDs = await getActivationKeyIDsByOfferIDFromDB(
+					orderItem.offerID
+				);
+				let index = 0;
+				const OnerLinkID = await getOnerLinkByUserAndProduct(
+					userID,
+					orderItem.productID
+				);
+				while (index < orderItem.amount) {
+					transferActivationTokenOwnership(
+						OnerLinkID,
+						activationKeyIDs[index].id
+					);
+					index++;
+				}
+				// activationKeyIDs.forEach((activationKeyID: any) => {
+				// 	transferActivationTokenOwnership(userID, activationKeyID)
+				// });
+			}
+		);
+
 		await deleteAllCartLinksByUserFromDB(userID);
 		res.sendStatus(201);
 	} catch (err) {

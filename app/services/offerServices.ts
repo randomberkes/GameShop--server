@@ -7,8 +7,8 @@ const getOffersFromDB = async (productID: number) => {
 			[productID]
 		);
 	});
-
-	return response;
+	const offers = response.rows;
+	return offers;
 };
 
 const getOfferActivatinKeyNumberFromDB = async (offerID: number) => {
