@@ -60,6 +60,18 @@ const getOnerLinkByUserAndProduct = async (
 	return onerLinkID;
 };
 
+const getOrderIDsByUserFromDB = async (userID: number) => {
+	const respone = await connectToDatabase(async (db) => {
+		return await db.query("SELECT id FROM orders WHERE user_id = $1;", [
+			userID,
+		]);
+	});
+	const onerLinkID = respone.rows.map((row: any) => {
+		return row.id;
+	});
+	return onerLinkID;
+};
+
 const addOrderItemLinkToDB = async (
 	offerID: number,
 	orderID: number,
@@ -80,4 +92,5 @@ export {
 	transferActivationTokenOwnership,
 	addNewOnerLinkToDB,
 	getOnerLinkByUserAndProduct,
+	getOrderIDsByUserFromDB,
 };

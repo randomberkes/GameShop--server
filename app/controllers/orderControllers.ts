@@ -5,6 +5,7 @@ import {
 	addOrderItemLinkToDB,
 	getActivationKeyIDsByOfferIDFromDB,
 	getOnerLinkByUserAndProduct,
+	getOrderIDsByUserFromDB,
 	transferActivationTokenOwnership,
 } from "../services/orderServices";
 
@@ -67,5 +68,16 @@ const handleAddOrder = async (req: any, res: any) => {
 		res.status(500).json({ message: err });
 	}
 };
+const handleGetOrderIDsByUser = async (req: any, res: any) => {
+	const userID = req.id;
+	try {
+		const orderID = await getOrderIDsByUserFromDB(userID);
+		res.status(200).json(orderID);
+	} catch (err) {
+		res.status(500).json({ message: err });
+	}
+};
 
-export { handleAddOrder };
+getOrderIDsByUserFromDB;
+
+export { handleAddOrder, handleGetOrderIDsByUser };
