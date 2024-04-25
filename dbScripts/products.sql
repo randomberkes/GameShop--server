@@ -238,9 +238,13 @@ CREATE TABLE offers (
 	UNIQUE (product_id, user_id)
 )
 --getOffersFromDB
-SELECT users.name,offers.price, offers.id FROM users 
-JOIN offers ON offers.user_id = users.id 
-WHERE offers.product_id = $1;
+SELECT offers.id, offers.price, products.* FROM offers 
+JOIN products ON offers.product_id = products.id 
+WHERE offers.user_id = 14;
+
+SELECT * FROM offers  WHERE user_id = 14;
+
+SELECT activation_key FROM activation_keys WHERE offer_id = 3
 
 INSERT INTO offers (product_id, user_id, price) VALUES (2, 16, 15000);
 INSERT INTO offers (product_id, user_id, price) VALUES (1, 16, 12000);

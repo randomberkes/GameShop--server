@@ -12,15 +12,6 @@ const addNewOrderToDB = async (price: number, userID: number) => {
 	return orderID;
 };
 
-const addNewOnerLinkToDB = async (productID: number, userID: number) => {
-	const response = await connectToDatabase(async (db) => {
-		return await db.query(
-			"INSERT INTO owners (product_id, user_id) VALUES ($1, $2);",
-			[productID, userID]
-		);
-	});
-};
-
 const getActivationKeyIDsByOfferIDFromDB = async (offerID: number) => {
 	const response = await connectToDatabase(async (db) => {
 		return await db.query(
@@ -30,34 +21,6 @@ const getActivationKeyIDsByOfferIDFromDB = async (offerID: number) => {
 	});
 	const activationKeyIDs = response.rows;
 	return activationKeyIDs;
-};
-
-const transferActivationTokenOwnership = async (
-	userID: number,
-	activationKeyID: number
-) => {
-	const response = await connectToDatabase(async (db) => {
-		return await db.query(
-			"UPDATE activation_keys SET offer_id=null, owner_id=$1 WHERE id=$2;",
-			[userID, activationKeyID]
-		);
-	});
-	const orderIDs = response;
-	return orderIDs;
-};
-
-const getOnerLinkByUserAndProduct = async (
-	userID: number,
-	productID: number
-) => {
-	const respone = await connectToDatabase(async (db) => {
-		return await db.query(
-			"SELECT id FROM owners WHERE user_id = $1 AND product_id = $2;",
-			[userID, productID]
-		);
-	});
-	const onerLinkID = respone.rows[0].id;
-	return onerLinkID;
 };
 
 const getOrderIDsByUserFromDB = async (userID: number) => {
@@ -104,9 +67,6 @@ export {
 	addNewOrderToDB,
 	addOrderItemLinkToDB,
 	getActivationKeyIDsByOfferIDFromDB,
-	transferActivationTokenOwnership,
-	addNewOnerLinkToDB,
-	getOnerLinkByUserAndProduct,
 	getOrderIDsByUserFromDB,
 	getOrderItemIDsByOrderFromDB,
 };

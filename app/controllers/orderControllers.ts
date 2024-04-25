@@ -1,14 +1,16 @@
+import { transferActivationTokenOwnership } from "../services/activationKeyServices";
 import { deleteAllCartLinksByUserFromDB } from "../services/cartServices";
 import {
-	addNewOnerLinkToDB,
 	addNewOrderToDB,
 	addOrderItemLinkToDB,
 	getActivationKeyIDsByOfferIDFromDB,
-	getOnerLinkByUserAndProduct,
 	getOrderIDsByUserFromDB,
 	getOrderItemIDsByOrderFromDB,
-	transferActivationTokenOwnership,
 } from "../services/orderServices";
+import {
+	addNewOnerLinkToDB,
+	getOnerLinkByUserAndProduct,
+} from "../services/ownerServices";
 
 const handleAddOrder = async (req: any, res: any) => {
 	const price = req.body.price;
@@ -57,9 +59,6 @@ const handleAddOrder = async (req: any, res: any) => {
 					);
 					index++;
 				}
-				// activationKeyIDs.forEach((activationKeyID: any) => {
-				// 	transferActivationTokenOwnership(userID, activationKeyID)
-				// });
 			}
 		);
 
