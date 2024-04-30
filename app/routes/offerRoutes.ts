@@ -5,8 +5,6 @@ import {
 	handlegetOffers,
 } from "../controllers/offerControllers";
 import verifyJWT from "../middleware/verifyJWT";
-import verifyRoles from "../middleware/verifyRoles";
-import ROLES_LIST from "../config/roles_list";
 
 const offerRouter = express.Router();
 
@@ -15,7 +13,7 @@ offerRouter
 	.get(
 		"/byUser",
 		verifyJWT,
-		verifyRoles(ROLES_LIST.Buyer, ROLES_LIST.Seller),
+
 		handleGetOffersByUser
 	)
 	.route("/")

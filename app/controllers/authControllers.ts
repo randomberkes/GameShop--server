@@ -122,8 +122,8 @@ const handleLogin = async (req: Request, res: Response) => {
 		await setUserRefreshToken(foundUser.email, refreshToken);
 		res.cookie("jwt", refreshToken, {
 			httpOnly: true,
-			sameSite: "none",
-			secure: true,
+			// sameSite: "none",
+			// secure: true,
 			maxAge: 24 * 60 * 60 * 1000,
 		});
 		res.json({ accessToken, roles: foundUser.roles, name: foundUser.name });

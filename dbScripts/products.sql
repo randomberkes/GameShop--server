@@ -49,6 +49,21 @@ INSERT INTO products (name, platform, game_device_compatibility, game_type, rati
 VALUES ('God of War Ragnarök, PlayStation 5', 'PlayStation', 
 		'Playstation 5', 'Kaland', '18',
 	   'Egy','description', '22.190')
+	   INSERT INTO products (name, platform, game_device_compatibility, game_type, rating_pegi, number_of_players, description)
+VALUES ('EA Sports FC 24 Xbox One', ' Xbox', 
+		'Xbox One Xbox Series X', 'Sport', '3+',
+	   'Egy Több','Örömmel üdvözöl az EA SPORTS FC™ 24! Ez itt a világ kedvenc játéka: a legélethűbb futballélmény a HyperMotionV* technológiával, az Opta által optimalizált PlayStyles játékstílusokkal és a továbbfejlesztett Frostbite™ játékmotorral, amellyel újragondoljuk, hogyan mozog és játszik több mint 19 000 autentikus játékos minden meccsen.')
+	   
+	   
+INSERT INTO products (name, platform, game_device_compatibility, game_type, rating_pegi, number_of_players, description)
+VALUES ('Forza Horizon 5, Xbox Series One/X', ' Xbox', 
+		'Xbox One Xbox Series X', 'Racing', '3+',
+	   'Egy Több','Minden idők Horizon-kalandja vár rád! Fedezd fel Mexikó életteli és folyamatosan változó, nyílt világú tájait a határtalan, szórakoztató vezetési akció során a világ legjobb autóinak százaival.')
+	   
+	   INSERT INTO products (name, platform, game_device_compatibility, game_type, rating_pegi, number_of_players, description)
+VALUES ('Ghostwire Tokyo PC', 'PC', 
+		'PC', 'Akció/Kaland', '16+',
+	   'Egy','Ghostwire: Tokyo egy akció-kalandjáték, melyet a Tango Gameworks fejlesztett és a Bethesda Softworks adott ki. A játék a modern Tokyo-ban játszódik, ahol a város lakói hirtelen eltűnnek, és különös paranormális jelenségek veszik kezdetüket. A játékos egy misztikus erővel felruházott harcost irányít, aki képes szembeszállni az ok nélküli eltűnésekért felelős lényekkel.')
 	   
 	   
 	   
@@ -221,9 +236,12 @@ INSERT INTO activation_keys (offer_id, activation_key) VALUES (1,'6677-4589-5791
 INSERT INTO activation_keys (offer_id, activation_key) VALUES (1,'3384-9446-2064-9365');
 
 INSERT INTO activation_keys  (offer_id, activation_key)VALUES (4,'8801-9761-8442-6430');
+INSERT INTO activation_keys (offer_id, activation_key) VALUES (11,'3004-9446-2084-9005');
+
+INSERT INTO activation_keys  (offer_id, activation_key)VALUES (12,'8701-9761-8942-6430');
 
 
-
+SELECT * FROM products WHERE( platform = 'Xbox' )
 
 
 
@@ -250,6 +268,8 @@ INSERT INTO offers (product_id, user_id, price) VALUES (2, 16, 15000);
 INSERT INTO offers (product_id, user_id, price) VALUES (1, 16, 12000);
 INSERT INTO offers (product_id, user_id, price) VALUES (2, 15, 14000);
 INSERT INTO offers (product_id, user_id, price) VALUES (3, 14, 17000);
+INSERT INTO offers (product_id, user_id, price) VALUES (4, 14, 19000);
+INSERT INTO offers (product_id, user_id, price) VALUES (5, 14, 20000);
 
 UPDATE activation_keys SET offer_id=null, owner_id=1 WHERE offer_id=4, id=1; 
 

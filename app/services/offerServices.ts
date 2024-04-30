@@ -17,7 +17,7 @@ export const mapDataToProduct = (data: any) => {
 const getOffersFromDB = async (productID: number) => {
 	const response = await connectToDatabase(async (db) => {
 		return await db.query(
-			"SELECT users.name,offers.price, offers.id FROM users JOIN offers ON offers.user_id = users.id WHERE offers.product_id = $1;",
+			"SELECT DISTINCT users.name,offers.price, offers.id FROM users JOIN offers ON offers.user_id = users.id JOIN activation_keys ON activation_keys.offer_id = offers.id WHERE offers.product_id = $1;",
 			[productID]
 		);
 	});
@@ -28,7 +28,7 @@ const getOffersFromDB = async (productID: number) => {
 const getOffersByUserFromDB = async (userID: number) => {
 	const response = await connectToDatabase(async (db) => {
 		return await db.query(
-			"SELECT offers.id as offerID, offers.price, products.* FROM offers JOIN products ON offers.product_id = products.id WHERE offers.user_id = $1;",
+			"SELECT DISTINCT offers.id as offerID, offers.price, products.* FROM offers JOIN products ON offers.product_id = products.id JOIN activation_keys ON activation_keys.offer_id = offers.id WHERE offers.user_id = $1;",
 			[userID]
 		);
 	});

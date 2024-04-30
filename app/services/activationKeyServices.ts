@@ -29,7 +29,7 @@ const getActivationKeysByOfferLinkFromDB = async (offerID: any) => {
 const getOwnerLinksFromDB = async (userID: number) => {
 	const response = await connectToDatabase(async (db) => {
 		return await db.query(
-			"SELECT id, product_id FROM owners WHERE user_id = $1;",
+			"SELECT DISTINCT owners.id, product_id FROM owners JOIN activation_keys ON activation_keys.owner_id = owners.id WHERE user_id = $1;",
 			[userID]
 		);
 	});

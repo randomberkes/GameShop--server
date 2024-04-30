@@ -31,7 +31,6 @@ const getUserByIdFromDB = async (id: any) => {
 	const response = await connectToDatabase(async (db) => {
 		return await db.query("SELECT * FROM users WHERE id = $1", [id]);
 	});
-	console.log("HIIIIIIII");
 
 	return response;
 };

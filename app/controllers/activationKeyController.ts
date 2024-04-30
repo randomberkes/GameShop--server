@@ -12,12 +12,29 @@ import {
 import {
 	addNewOnerLinkToDB,
 	getOnerLinkByUserAndProduct,
+	getOwnerActivatinKeyNumberFromDB,
 } from "../services/ownerServices";
+// export async function filterOwnersAsync(owners: any[]) {
+// 	const ownerPromises = owners.map(async (owner) => {
+// 		const activationKeyNumber = await getOwnerActivatinKeyNumberFromDB(
+// 			owner.id
+// 		);
+// 		return {
+// 			owner,
+// 			isValid: activationKeyNumber.count != 0,
+// 		};
+// 	});
+// 	const results = await Promise.all(ownerPromises);
+// 	return results
+// 		.filter((result) => result.isValid)
+// 		.map((result) => result.owner);
+// }
 
 const handleGetOwnerLinks = async (req: any, res: any) => {
 	const userID = req.id;
 	try {
 		const ownerLinks = await getOwnerLinksFromDB(userID);
+		// const filteredOwners = await filterOwnersAsync(ownerLinks);
 		res.status(200).json(ownerLinks);
 	} catch (err) {
 		res.status(500).json({ message: err });
