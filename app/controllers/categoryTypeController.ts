@@ -1,8 +1,14 @@
-import { getAllCategoryTypesFromDB } from "../services/categoryTypeServices";
-import { Request, Response } from "express";
+import { Request, Response } from 'express';
+import { getAllCategoryTypesFromDB } from '../services/categoryTypeServices';
 
-export const getAllCategoryTypes = async (req: Request, res: Response) => {
-	const categoryTypes = await getAllCategoryTypesFromDB();
+const getAllCategoryTypes = async (req: Request, res: Response) => {
+	try {
+		const categoryTypes = await getAllCategoryTypesFromDB();
 
-	res.json(categoryTypes);
+		res.status(200).json(categoryTypes);
+	} catch (err: any) {
+		res.status(500).json({ message: err.message });
+	}
 };
+
+export { getAllCategoryTypes };

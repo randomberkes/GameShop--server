@@ -49,6 +49,21 @@ INSERT INTO products (name, platform, game_device_compatibility, game_type, rati
 VALUES ('God of War Ragnarök, PlayStation 5', 'PlayStation', 
 		'Playstation 5', 'Kaland', '18',
 	   'Egy','description', '22.190')
+	   INSERT INTO products (name, platform, game_device_compatibility, game_type, rating_pegi, number_of_players, description)
+VALUES ('EA Sports FC 24 Xbox One', ' Xbox', 
+		'Xbox One Xbox Series X', 'Sport', '3+',
+	   'Egy Több','Örömmel üdvözöl az EA SPORTS FC™ 24! Ez itt a világ kedvenc játéka: a legélethűbb futballélmény a HyperMotionV* technológiával, az Opta által optimalizált PlayStyles játékstílusokkal és a továbbfejlesztett Frostbite™ játékmotorral, amellyel újragondoljuk, hogyan mozog és játszik több mint 19 000 autentikus játékos minden meccsen.')
+	   
+	   
+INSERT INTO products (name, platform, game_device_compatibility, game_type, rating_pegi, number_of_players, description)
+VALUES ('Forza Horizon 5, Xbox Series One/X', ' Xbox', 
+		'Xbox One Xbox Series X', 'Racing', '3+',
+	   'Egy Több','Minden idők Horizon-kalandja vár rád! Fedezd fel Mexikó életteli és folyamatosan változó, nyílt világú tájait a határtalan, szórakoztató vezetési akció során a világ legjobb autóinak százaival.')
+	   
+	   INSERT INTO products (name, platform, game_device_compatibility, game_type, rating_pegi, number_of_players, description)
+VALUES ('Ghostwire Tokyo PC', 'PC', 
+		'PC', 'Akció/Kaland', '16+',
+	   'Egy','Ghostwire: Tokyo egy akció-kalandjáték, melyet a Tango Gameworks fejlesztett és a Bethesda Softworks adott ki. A játék a modern Tokyo-ban játszódik, ahol a város lakói hirtelen eltűnnek, és különös paranormális jelenségek veszik kezdetüket. A játékos egy misztikus erővel felruházott harcost irányít, aki képes szembeszállni az ok nélküli eltűnésekért felelős lényekkel.')
 	   
 	   
 	   
@@ -62,8 +77,12 @@ SELECT * FROM categoriesandproducts;
 
 --Products
 
-SELECT * FROM products;
-SELECT * FROM users WHERE id = 1;
+SELECT * FROM products  WHERE id=1 LIMIT 3 OFFSET 0;
+
+SELECT DISTINCT products.* FROM products 
+JOIN offers ON offers.product_id = products.id
+JOIN activation_keys ON activation_keys.offer_id = offers.id
+
 CREATE TABLE products (
 	id SERIAL PRIMARY KEY,
 	name TEXT,
@@ -91,9 +110,10 @@ CREATE TABLE users (
 
 UPDATE users
 SET name = 'randi'
-WHERE id=14;
+WHERE id=;
 
-INSERT INTO users(name, email, password)  VALUES ('test1', 'test1@gmail.com', 'test1');
+INSERT INTO users(id, name, email, password)  VALUES (50, 'test30', 'test30@gmail.com', 'test30');
+SELECT  * FROM users where id=50
 UPDATE users SET refreshToken='135' WHERE email = 'test1@gmail.com'
 
 
@@ -106,72 +126,176 @@ JOIN products ON products.id = categoriesandproducts.product_id)
 WHERE category_name = 'Playstation 5' OR category_name = 'Akció/Kaland' OR category_name = 'Sport'
 
 --favorites
+DROP TABLE favorites;
 SELECT * FROM favorites;
 
 CREATE TABLE favorites (
-	product_id INTEGER REFERENCES products(id),
 	user_id INTEGER REFERENCES users(id),
-	PRIMARY KEY (product_id, user_id)
+	offer_id INTEGER REFERENCES offers(id),
+	PRIMARY KEY (offer_id, user_id)
 )
 
 INSERT INTO favorites VALUES (3, 14);
 
 DELETE FROM favorites WHERE product_id = 3 AND user_id = 14;
 
-SELECT products.* FROM favorites
-JOIN users ON users.id = favorites.user_id
-JOIN products ON products.id = favorites.product_id
-WHERE user_id = 14;
+SELECT users.name as username, products.*, offers.price, offers.id as offerID FROM favorites
+JOIN offers ON offers.id = favorites.offer_id
+JOIN users ON users.id = offers.user_id
+JOIN products ON products.id = offers.product_id
+WHERE favorites.user_id = 14
 
 --cart
+DROP TABLE cart;
 SELECT * FROM cart;
-
+INSERT INTO cart VALUES (1, 16, '8228-9312-4655-2895');
 CREATE TABLE cart (
-	product_id INTEGER REFERENCES products(id),
 	user_id INTEGER REFERENCES users(id),
-	PRIMARY KEY (product_id, user_id)
+	offer_id INTEGER REFERENCES offers(id),
+	amount INTEGER,
+	PRIMARY KEY (offer_id, user_id)
 )
+INSERT INTO cart VALUES (14, 1, 3);
+INSERT INTO cart VALUES (14, 2, 1);
+INSERT INTO cart VALUES (14, 3, 2);
+
+INSERT INTO cart VALUES (16, 4, 2);
+
+
+DELETE FROM cart WHERE user_id = 14 AND price_id = 2;
+
 DELETE FROM cart WHERE user_id = 14;
+
+UPDATE cart SET amount=amount+1  WHERE offer_id = 3 AND user_id = 14 RETURNING amount;
+
+SELECT users.name, products.*, offers.price, offers.id as offerID, cart.amount  FROM cart
+JOIN offers ON offers.id = cart.offer_id
+JOIN users ON users.id = offers.user_id
+JOIN products ON products.id = offers.product_id
+WHERE cart.user_id = 14
 
 --order
 
 SELECT id FROM orders WHERE user_id = 14;
-SELECT * FROM order_items
+SELECT * FROM order_items WHERE order_id = 29
+DROP TABLE order_items;
 
-SELECT orders.id, products.name, order_items.amount,  products.img_path, products.price  FROM orders
-JOIN users ON users.id = orders.user_id
+CREATE TABLE order_items (
+	order_id  INTEGER REFERENCES orders(id),
+	offer_id INTEGER REFERENCES offers(id),
+	amount INTEGER,
+	PRIMARY KEY(order_id, offer_id)
+)
+
+alter table order_items
+drop constraint order_items_order_id_fkey,
+add constraint order_items_order_id_fkey
+   foreign key (order_id)
+   references orders(id)
+   on delete cascade;
+
+SELECT orders.id, products.name, order_items.amount, orders.price  FROM orders
 JOIN order_items ON orders.id = order_items.order_id
-JOIN products ON products.id = order_items.product_id
+JOIN offers ON offers.id = order_items.offer_id 
+JOIN products ON products.id = offers.product_id
 
-WHERE orders.id = 21; 
+WHERE orders.id = 28; 
 
 --activation key
 SELECT * FROM activation_keys;
+DROP TABLE activation_keys;
 
 SELECT * FROM activation_keys WHERE product_id = 1;
-SELECT COUNT(*) FROM activation_keys WHERE user_id = 16 AND product_id = 2;
+SELECT COUNT(*) FROM activation_keys WHERE user_id = 14 AND product_id = 2;
+SELECT COUNT(*)  FROM offers JOIN activation_keys ON activation_keys.offer_id = offers.id WHERE offers.id = 4;
 SELECT * FROM activation_keys WHERE product_id = 1;
 
-SELECT  DISTINCT users.name, activation_keys.price FROM activation_keys
-JOIN users ON users.id = activation_keys.user_id WHERE activation_keys.product_id = 2;
+SELECT orders.id, products.name, order_items.amount,  products.img_path, products.price  FROM orders
+JOIN users ON users.id = orders.user_id
+
+SELECT  DISTINCT users.name,prices.price FROM users
+JOIN prices ON prices.user_id = users.id 
+WHERE prices.product_id = 2;
 
 DROP TABLE activation_keys;
 
 CREATE TABLE activation_keys (
 	id SERIAL PRIMARY KEY,
-	product_id INTEGER REFERENCES products(id),
-	user_id INTEGER REFERENCES users(id),
-	price NUMERIC,
+	offer_id INTEGER REFERENCES offers(id),
+	owner_id INTEGER REFERENCES owners(id),
 	activation_key TEXT UNIQUE
 )
 
-INSERT INTO activation_keys (product_id, user_id, price, activation_key) VALUES (1, 16, 12000, '8228-9312-4655-2895');
-INSERT INTO activation_keys (product_id, user_id, price, activation_key) VALUES (1, 16, 12000, '7117-9361-9542-0662');
+SELECT activation_keys.* FROM owners
+JOIN activation_keys ON activation_keys.owner_id = owners.id
+WHERE owners.id = 50;
 
-INSERT INTO activation_keys (product_id, user_id, price, activation_key) VALUES (2, 15, 14000,'5238-9451-4733-4853');
-INSERT INTO activation_keys (product_id, user_id, price, activation_key) VALUES (2, 16, 15000,'9659-1825-8010-2537');
-INSERT INTO activation_keys (product_id, user_id, price, activation_key) VALUES (2, 16, 15000,'9159-0872-1757-3467');
 
-INSERT INTO activation_keys  (product_id, user_id, price, activation_key)VALUES (3, 14, 17000,'4997-3139-4949-1088');
- 
+INSERT INTO activation_keys (id, offer_id, activation_key) VALUES (50, 50, '5050-5050-5050-5050');
+INSERT INTO activation_keys (id, owner_id, activation_key) VALUES (60, 50, '0505-0505-0505-0505');
+INSERT INTO activation_keys (offer_id, activation_key) VALUES (2, '7735-3046-5926-4531');
+
+INSERT INTO activation_keys (offer_id, activation_key) VALUES (3,'5926-0504-5077-6160');
+INSERT INTO activation_keys (offer_id, activation_key) VALUES (1,'6677-4589-5791-6205');
+INSERT INTO activation_keys (offer_id, activation_key) VALUES (1,'3384-9446-2064-9365');
+
+INSERT INTO activation_keys  (offer_id, activation_key)VALUES (4,'8801-9761-8442-6430');
+INSERT INTO activation_keys (offer_id, activation_key) VALUES (11,'3004-9446-2084-9005');
+
+INSERT INTO activation_keys  (offer_id, activation_key)VALUES (12,'8701-9761-8942-6430');
+
+
+SELECT * FROM products WHERE( platform = 'Xbox' )
+
+
+
+--offers
+SELECT * FROM offers ;
+DROP TABLE prices;
+CREATE TABLE offers (
+	id SERIAL PRIMARY KEY,
+	product_id  INTEGER REFERENCES products(id),
+	user_id INTEGER REFERENCES users(id),
+	price NUMERIC,
+	UNIQUE (product_id, user_id)
+)
+--getOffersFromDB
+SELECT offers.id, offers.price, products.* FROM offers 
+JOIN products ON offers.product_id = products.id 
+WHERE offers.user_id = 14;
+
+SELECT activation_keys.* FROM offers
+JOIN activation_keys ON activation_keys.offer_id = offers.id
+
+SELECT * FROM offers  WHERE user_id = 50;
+
+SELECT * FROM activation_keys WHERE offer_id = 50
+
+INSERT INTO offers (product_id, user_id, price) VALUES (2, 16, 15000);
+INSERT INTO offers (id, product_id, user_id, price) VALUES (50, 1, 50, 50);
+INSERT INTO offers (product_id, user_id, price) VALUES (2, 15, 14000);
+INSERT INTO offers (product_id, user_id, price) VALUES (3, 14, 17000);
+INSERT INTO offers (product_id, user_id, price) VALUES (4, 14, 19000);
+INSERT INTO offers (product_id, user_id, price) VALUES (5, 14, 20000);
+
+UPDATE activation_keys SET offer_id=null, owner_id=1 WHERE offer_id=4, id=1; 
+
+SELECT id from activation_keys WHERE offer_id=2; 
+
+--own
+
+SELECT id FROM owners WHERE user_id = 14;
+SELECT * FROM owners
+CREATE TABLE owners (
+	id SERIAL PRIMARY KEY,
+	product_id  INTEGER REFERENCES products(id),
+	user_id INTEGER REFERENCES users(id),
+	UNIQUE (product_id, user_id)
+)
+
+SELECT activation_keys.* FROM owners
+JOIN activation_keys ON activation_keys.owner_id = owners.id
+WHERE owners.user_id = 14;
+
+INSERT INTO owners (id, product_id, user_id) VALUES (50, 1, 50);
 

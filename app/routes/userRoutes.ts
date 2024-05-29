@@ -1,21 +1,14 @@
 import express from "express";
-import verifyJWT from "../middleware/verifyJWT";
-import verifyRole from "../middleware/verifyRoles";
-import ROLES_LIST from "../config/roles_list";
 import {
-	handleGetUsers,
 	handleGetUserByEmail,
 	handleUpdateUser,
 } from "../controllers/userControllers";
+import verifyJWT from "../middleware/verifyJWT";
 
 const userRouter = express.Router();
-const router = express.Router();
 
 userRouter
-	.route("/")
-	.get(verifyJWT, verifyRole(ROLES_LIST.Buyer), handleGetUsers)
-	.put(verifyJWT, verifyRole(ROLES_LIST.Buyer), handleUpdateUser);
+	.put("/", verifyJWT, handleUpdateUser)
+	.get("/email", handleGetUserByEmail);
 
-const getUsersByEmail = router.get("/email", handleGetUserByEmail);
-
-export { userRouter, getUsersByEmail };
+export { userRouter };

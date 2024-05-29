@@ -1,56 +1,32 @@
-import express from "express";
-import verifyJWT from "../middleware/verifyJWT";
-import verifyRoles from "../middleware/verifyRoles";
-import ROLES_LIST from "../config/roles_list";
+import express from 'express';
+import verifyJWT from '../middleware/verifyJWT';
+
 import {
 	handleAddCartLink,
 	handleDecrementCartLink,
 	handleDeleteCartLink,
-	handleGetAmountOfCartLink,
-	handleGetCartProductsByUser,
+	handleGetCartOffersByUser,
 	handleIncrementCartLink,
-} from "../controllers/cartControllers";
+} from '../controllers/cartControllers';
 
 const cartRouter = express.Router();
 const amountRouter = express.Router();
-// const deleteAllRouter = express.Router();
 
 cartRouter
-	.route("/")
-	.post(
-		verifyJWT,
-		verifyRoles(ROLES_LIST.Buyer, ROLES_LIST.Seller),
-		handleAddCartLink
-	)
-	.delete(
-		verifyJWT,
-		verifyRoles(ROLES_LIST.Buyer, ROLES_LIST.Seller),
-		handleDeleteCartLink
-	)
-	.get(
-		verifyJWT,
-		verifyRoles(ROLES_LIST.Buyer, ROLES_LIST.Seller),
-		handleGetCartProductsByUser
-	);
+	.route('/')
+	.post(verifyJWT, handleAddCartLink)
+	.delete(verifyJWT, handleDeleteCartLink)
+	.get(verifyJWT, handleGetCartOffersByUser);
 
 const increment = amountRouter.get(
-	"/increment",
+	'/increment',
 	verifyJWT,
-	verifyRoles(ROLES_LIST.Buyer, ROLES_LIST.Seller),
 	handleIncrementCartLink
 );
 const decrement = amountRouter.get(
-	"/decrement",
+	'/decrement',
 	verifyJWT,
-	verifyRoles(ROLES_LIST.Buyer, ROLES_LIST.Seller),
 	handleDecrementCartLink
 );
 
-const amount = amountRouter.get(
-	"/amount",
-	verifyJWT,
-	verifyRoles(ROLES_LIST.Buyer, ROLES_LIST.Seller),
-	handleGetAmountOfCartLink
-);
-
-export { cartRouter, increment, decrement };
+export { cartRouter, decrement, increment };

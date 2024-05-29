@@ -1,12 +1,19 @@
 import express from "express";
+import {
+	handleGetOfferActivatinKeyNumber,
+	handleGetOffersByUser,
+	handleUpdateOfferPrice,
+	handlegetOffers,
+} from "../controllers/offerControllers";
 import verifyJWT from "../middleware/verifyJWT";
-import verifyRoles from "../middleware/verifyRoles";
-import ROLES_LIST from "../config/roles_list";
-import { handleAddOrder } from "../controllers/orderControllers";
-import { handlegetOffers } from "../controllers/offerControllers";
 
 const offerRouter = express.Router();
 
-offerRouter.route("/").get(handlegetOffers);
+offerRouter
+	.get("/amount", handleGetOfferActivatinKeyNumber)
+	.get("/byUser", verifyJWT, handleGetOffersByUser)
+	.route("/")
+	.patch(verifyJWT, handleUpdateOfferPrice)
+	.get(handlegetOffers);
 
 export { offerRouter };

@@ -1,21 +1,32 @@
 import connectToDatabase from "../../db";
 
-const addCartLinkToDB = async (productID: number, userID: number) => {
+const addCartLinkToDB = async (userID: number, offerID: number) => {
+	const response = await connectToDatabase(async (db) => {
+		return await db.query("INSERT INTO cart VALUES ($1, $2, 1)", [
+			userID,
+			offerID,
+		]);
+	});
+	const allUsers = response.rows;
+	return allUsers;
+};
+
+const deleteCartLinkFromDB = async (offerID: number, userID: number) => {
 	const response = await connectToDatabase(async (db) => {
 		return await db.query(
-			"INSERT INTO cart (product_id, user_id) VALUES ($1, $2)",
-			[productID, userID]
+			"DELETE FROM cart WHERE offer_id = $1 AND user_id = $2;",
+			[offerID, userID]
 		);
 	});
 	const allUsers = response.rows;
 	return allUsers;
 };
 
-const deleteCartLinkFromDB = async (productID: number, userID: number) => {
+const getCartOffersByUserFromDB = async (userID: number) => {
 	const response = await connectToDatabase(async (db) => {
 		return await db.query(
-			"DELETE FROM cart WHERE product_id = $1 AND user_id = $2;",
-			[productID, userID]
+			"SELECT users.name as username, offers.price, products.*, cart.amount, offers.id as offerID  FROM cart JOIN offers ON offers.id = cart.offer_id JOIN users ON users.id = offers.user_id JOIN products ON products.id = offers.product_id WHERE cart.user_id = $1",
+			[userID]
 		);
 	});
 	const allUsers = response.rows;
@@ -30,56 +41,48 @@ const deleteAllCartLinksByUserFromDB = async (userID: number) => {
 	return allUsers;
 };
 
-const getAmountOfCartLinkFromDB = async (productID: number, userID: number) => {
+const getMaxAmountOfCartLinkFromDB = async (
+	offerID: number,
+	userID: number
+) => {
 	const response = await connectToDatabase(async (db) => {
 		return await db.query(
-			"SELECT cart.amount FROM cart WHERE product_id = $1 AND user_id = $2",
-			[productID, userID]
+			"SELECT COUNT(*)  FROM cart JOIN offers ON cart.offer_id = offers.id JOIN activation_keys ON activation_keys.offer_id = offers.id WHERE cart.user_id = $1 AND offers.id = $2;",
+			[userID, offerID]
 		);
 	});
 	const allUsers = response.rows;
 	return allUsers;
 };
 
-const incrementCartLinkFromDB = async (productID: number, userID: number) => {
+const incrementCartLinkFromDB = async (offerID: number, userID: number) => {
 	const response = await connectToDatabase(async (db) => {
 		return await db.query(
-			"UPDATE cart SET amount=amount+1 WHERE product_id = $1 AND user_id = $2;",
-			[productID, userID]
+			"UPDATE cart SET amount=amount+1 WHERE offer_id = $1 AND user_id = $2 RETURNING amount;",
+			[offerID, userID]
 		);
 	});
-	const allUsers = response.rows;
-	return allUsers;
+	const amount = response.rows[0];
+	return amount;
 };
 
-const decrementCartLinkFromDB = async (productID: number, userID: number) => {
+const decrementCartLinkFromDB = async (offerID: number, userID: number) => {
 	const response = await connectToDatabase(async (db) => {
 		return await db.query(
-			"UPDATE cart SET amount=amount-1 WHERE product_id = $1 AND user_id = $2;",
-			[productID, userID]
+			"UPDATE cart SET amount=amount-1 WHERE offer_id = $1 AND user_id = $2 RETURNING amount;",
+			[offerID, userID]
 		);
 	});
-	const allUsers = response.rows;
-	return allUsers;
-};
-
-const getCartProductsByUserFromDB = async (userID: number) => {
-	const response = await connectToDatabase(async (db) => {
-		return await db.query(
-			"SELECT products.* FROM cart JOIN users ON users.id = cart.user_id JOIN products ON products.id = cart.product_id WHERE user_id = $1;",
-			[userID]
-		);
-	});
-	const allUsers = response.rows;
-	return allUsers;
+	const amount = response.rows[0];
+	return amount;
 };
 
 export {
 	addCartLinkToDB,
 	deleteCartLinkFromDB,
-	getCartProductsByUserFromDB,
+	getCartOffersByUserFromDB,
 	incrementCartLinkFromDB,
 	decrementCartLinkFromDB,
-	getAmountOfCartLinkFromDB,
+	getMaxAmountOfCartLinkFromDB,
 	deleteAllCartLinksByUserFromDB,
 };
