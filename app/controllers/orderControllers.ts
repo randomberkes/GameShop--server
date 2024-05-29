@@ -1,21 +1,20 @@
-import { transferActivationTokenOwnership } from "../services/activationKeyServices";
-import { deleteAllCartLinksByUserFromDB } from "../services/cartServices";
+import { transferActivationTokenOwnership } from '../services/activationKeyServices';
+import { deleteAllCartLinksByUserFromDB } from '../services/cartServices';
 import {
 	addNewOrderToDB,
 	addOrderItemLinkToDB,
 	getActivationKeyIDsByOfferIDFromDB,
 	getOrderIDsByUserFromDB,
 	getOrderItemIDsByOrderFromDB,
-} from "../services/orderServices";
+} from '../services/orderServices';
 import {
 	addNewOnerLinkToDB,
 	getOnerLinkByUserAndProduct,
-} from "../services/ownerServices";
+} from '../services/ownerServices';
 
 const handleAddOrder = async (req: any, res: any) => {
 	const price = req.body.price;
 	const orderItems = req.body.orderItems;
-	console.log(orderItems);
 	const userID = req.id;
 	try {
 		const orderID = await addNewOrderToDB(price, userID);
@@ -27,9 +26,7 @@ const handleAddOrder = async (req: any, res: any) => {
 			}) => {
 				try {
 					await addNewOnerLinkToDB(orderItem.productID, userID);
-				} catch (err) {
-					console.log(err);
-				}
+				} catch (err) {}
 			}
 		);
 
@@ -64,18 +61,17 @@ const handleAddOrder = async (req: any, res: any) => {
 
 		await deleteAllCartLinksByUserFromDB(userID);
 		res.sendStatus(201);
-	} catch (err) {
-		res.status(500).json({ message: err });
+	} catch (err: any) {
+		res.status(500).json({ message: err.message });
 	}
 };
 const handleGetOrderIDsByUser = async (req: any, res: any) => {
 	const userID = req.id;
 	try {
 		const orderID = await getOrderIDsByUserFromDB(userID);
-		console.log(orderID);
 		res.status(200).json(orderID);
-	} catch (err) {
-		res.status(500).json({ message: err });
+	} catch (err: any) {
+		res.status(500).json({ message: err.message });
 	}
 };
 
@@ -84,14 +80,13 @@ const handleGetOrderItemIDsByOrder = async (req: any, res: any) => {
 	try {
 		const orderItems = await getOrderItemIDsByOrderFromDB(orderID);
 		res.status(200).json(orderItems);
-	} catch (err) {
-		console.log(err);
-		res.status(500).json({ message: err });
+	} catch (err: any) {
+		res.status(500).json({ message: err.message });
 	}
 };
 
 export {
 	handleAddOrder,
-	handleGetOrderItemIDsByOrder,
 	handleGetOrderIDsByUser,
+	handleGetOrderItemIDsByOrder,
 };

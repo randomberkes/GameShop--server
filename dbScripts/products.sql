@@ -77,9 +77,11 @@ SELECT * FROM categoriesandproducts;
 
 --Products
 
-SELECT * FROM products;
+SELECT * FROM products  WHERE id=1 LIMIT 3 OFFSET 0;
 
-SELECT * FROM products WHERE id = 1;
+SELECT DISTINCT products.* FROM products 
+JOIN offers ON offers.product_id = products.id
+JOIN activation_keys ON activation_keys.offer_id = offers.id
 
 CREATE TABLE products (
 	id SERIAL PRIMARY KEY,
@@ -108,9 +110,10 @@ CREATE TABLE users (
 
 UPDATE users
 SET name = 'randi'
-WHERE id=14;
+WHERE id=;
 
-INSERT INTO users(name, email, password)  VALUES ('test1', 'test1@gmail.com', 'test1');
+INSERT INTO users(id, name, email, password)  VALUES (50, 'test30', 'test30@gmail.com', 'test30');
+SELECT  * FROM users where id=50
 UPDATE users SET refreshToken='135' WHERE email = 'test1@gmail.com'
 
 
@@ -260,12 +263,15 @@ SELECT offers.id, offers.price, products.* FROM offers
 JOIN products ON offers.product_id = products.id 
 WHERE offers.user_id = 14;
 
-SELECT * FROM offers  WHERE user_id = 14;
+SELECT activation_keys.* FROM offers
+JOIN activation_keys ON activation_keys.offer_id = offers.id
+
+SELECT * FROM offers  WHERE user_id = 50;
 
 SELECT activation_key FROM activation_keys WHERE offer_id = 3
 
 INSERT INTO offers (product_id, user_id, price) VALUES (2, 16, 15000);
-INSERT INTO offers (product_id, user_id, price) VALUES (1, 16, 12000);
+INSERT INTO offers (id, product_id, user_id, price) VALUES (50, 1, 50, 50);
 INSERT INTO offers (product_id, user_id, price) VALUES (2, 15, 14000);
 INSERT INTO offers (product_id, user_id, price) VALUES (3, 14, 17000);
 INSERT INTO offers (product_id, user_id, price) VALUES (4, 14, 19000);

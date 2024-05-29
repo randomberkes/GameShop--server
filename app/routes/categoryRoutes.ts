@@ -1,6 +1,8 @@
-import express from "express";
-import { getCategoriesByType } from "../controllers/categoryControllers";
+import express from 'express';
+import { getCategoriesByType } from '../controllers/categoryControllers';
 
-const router = express.Router();
+const categoryRouter = express.Router();
 
-export const getCategoriesByTypeRouter = router.get("/", getCategoriesByType);
+categoryRouter.route('/').get(getCategoriesByType);
+
+export { categoryRouter };

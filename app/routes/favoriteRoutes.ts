@@ -10,20 +10,8 @@ const favoriteRouter = express.Router();
 
 favoriteRouter
 	.route("/")
-	.post(
-		verifyJWT,
-
-		handleAddFavoritesLink
-	)
-	.delete(
-		verifyJWT,
-
-		handleDeleteFavoritesLink
-	)
-	.get(
-		verifyJWT,
-
-		handleGetFavoritesProductsByUser
-	);
+	.post(verifyJWT, handleAddFavoritesLink)
+	.delete(verifyJWT, handleDeleteFavoritesLink)
+	.get(verifyJWT, handleGetFavoritesProductsByUser);
 
 export { favoriteRouter };

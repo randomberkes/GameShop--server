@@ -1,12 +1,20 @@
-import { ParsedQs } from "qs";
-import connectToDatabase from "../../db";
+import { ParsedQs } from 'qs';
+import connectToDatabase from '../../db';
 
 export const getAllProductsFromDB = async (limit: any, offset: any) => {
 	const response = await connectToDatabase(async (db) => {
 		return await db.query(
-			"SELECT DISTINCT products.* FROM products JOIN offers ON offers.product_id = products.id JOIN activation_keys ON activation_keys.offer_id = offers.id LIMIT $1 OFFSET $2",
+			'SELECT DISTINCT products.* FROM products JOIN offers ON offers.product_id = products.id JOIN activation_keys ON activation_keys.offer_id = offers.id WHERE offers.price != 0 LIMIT $1 OFFSET $2',
 			[limit, offset]
 		);
+	});
+	const allProducts = response.rows;
+	return allProducts;
+};
+
+export const getAllProductsForNewOfferFromDB = async () => {
+	const response = await connectToDatabase(async (db) => {
+		return await db.query('SELECT * FROM products ');
 	});
 	const allProducts = response.rows;
 	return allProducts;
@@ -15,7 +23,7 @@ export const getAllProductsFromDB = async (limit: any, offset: any) => {
 export const getAllProductsCountFromDB = async () => {
 	const response = await connectToDatabase(async (db) => {
 		return await db.query(
-			"SELECT COUNT(DISTINCT products.*) FROM products JOIN offers ON offers.product_id = products.id JOIN activation_keys ON activation_keys.offer_id = offers.id;"
+			'SELECT COUNT(DISTINCT products.*) FROM products JOIN offers ON offers.product_id = products.id JOIN activation_keys ON activation_keys.offer_id = offers.id WHERE offers.price != 0;'
 		);
 	});
 	const productsCount = response.rows[0].count;
@@ -24,7 +32,7 @@ export const getAllProductsCountFromDB = async () => {
 
 const getProductByIDFromDB = async (productID: any) => {
 	const response = await connectToDatabase(async (db) => {
-		return await db.query("SELECT * FROM products WHERE id = $1;", [productID]);
+		return await db.query('SELECT * FROM products WHERE id = $1;', [productID]);
 	});
 	return response;
 };
@@ -36,7 +44,7 @@ export const getProductsByNameFromDB = async (
 		//prepare satemant
 		return await db.query(
 			`SELECT * FROM products WHERE LOWER(name) ~'.*${
-				typeof productName === "string"
+				typeof productName === 'string'
 					? productName.toLowerCase()
 					: productName
 			}.*'`
@@ -58,70 +66,66 @@ export const getProductsByFilterFromDB = async (
 	limit: any,
 	offset: any
 ) => {
-	let fullFilter = "";
+	let fullFilter = '';
 	let count = 0;
 	for (let key in filter) {
-		let oneColumnFilter = "";
+		let oneColumnFilter = '';
 		for (let i = 0; i < filter[key].length; i++) {
 			const oneFilter = ` ${key} = '${
 				filter[key as keyof typeof filter]![i]
 			}' `;
 			oneColumnFilter += oneFilter;
 			if (i < filter[key as keyof typeof filter]!.length - 1) {
-				oneColumnFilter += "OR";
+				oneColumnFilter += 'OR';
 			}
 		}
 		oneColumnFilter = `(${oneColumnFilter})`;
-		if (count > 0) fullFilter += "AND";
+		if (count > 0) fullFilter += 'AND';
 		fullFilter += oneColumnFilter;
-		oneColumnFilter = "";
+		oneColumnFilter = '';
 		count++;
 	}
 
 	const select =
-		"SELECT DISTINCT products.* FROM products JOIN offers ON offers.product_id = products.id JOIN activation_keys ON activation_keys.offer_id = offers.id WHERE " +
+		'SELECT DISTINCT products.* FROM products JOIN offers ON offers.product_id = products.id JOIN activation_keys ON activation_keys.offer_id = offers.id WHERE offers.price != 0 AND' +
 		fullFilter +
 		` LIMIT ${limit} OFFSET ${offset}`;
-	console.log(select);
 	const response = await connectToDatabase(async (db) => {
 		//prepare satemant
 		return await db.query(select);
 	});
-	console.log(response.rows);
 	const allProducts = response.rows;
 	return allProducts;
 };
 
 export const getProductsCountByFilterFromDB = async (filter: any) => {
-	let fullFilter = "";
+	let fullFilter = '';
 	let count = 0;
 	for (let key in filter) {
-		let oneColumnFilter = "";
+		let oneColumnFilter = '';
 		for (let i = 0; i < filter[key].length; i++) {
 			const oneFilter = ` ${key} = '${
 				filter[key as keyof typeof filter]![i]
 			}' `;
 			oneColumnFilter += oneFilter;
 			if (i < filter[key as keyof typeof filter]!.length - 1) {
-				oneColumnFilter += "OR";
+				oneColumnFilter += 'OR';
 			}
 		}
 		oneColumnFilter = `(${oneColumnFilter})`;
-		if (count > 0) fullFilter += "AND";
+		if (count > 0) fullFilter += 'AND';
 		fullFilter += oneColumnFilter;
-		oneColumnFilter = "";
+		oneColumnFilter = '';
 		count++;
 	}
 
 	const select =
-		"SELECT  COUNT( DISTINCT products.*) FROM products JOIN offers ON offers.product_id = products.id JOIN activation_keys ON activation_keys.offer_id = offers.id WHERE " +
+		'SELECT  COUNT( DISTINCT products.*) FROM products JOIN offers ON offers.product_id = products.id JOIN activation_keys ON activation_keys.offer_id = offers.id WHERE ' +
 		fullFilter;
-	console.log(select);
 	const response = await connectToDatabase(async (db) => {
 		//prepare satemant
 		return await db.query(select);
 	});
-	console.log(response.rows);
 	const productsCount = response.rows[0].count;
 	return productsCount;
 };

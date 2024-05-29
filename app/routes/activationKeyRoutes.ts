@@ -1,5 +1,5 @@
-import express from "express";
-import verifyJWT from "../middleware/verifyJWT";
+import express from 'express';
+import verifyJWT from '../middleware/verifyJWT';
 
 import {
 	handleAddActivationKeyToOffer,
@@ -7,41 +7,18 @@ import {
 	handleGetActivationKeysByOfferLink,
 	handleGetActivationKeysByOwnerLink,
 	handleGetOwnerLinks,
-} from "../controllers/activationKeyController";
-import ROLES_LIST from "../config/roles_list";
+	handleNewAddActivationKeyToOffer,
+} from '../controllers/activationKeyController';
 
 const activationKeyRouter = express.Router();
 
 activationKeyRouter
-	.get(
-		"/byUser",
-		verifyJWT,
-
-		handleGetActivationKeysByOfferLink
-	)
-	.get(
-		"/",
-		verifyJWT,
-
-		handleGetActivationKeysByOwnerLink
-	)
-	.post(
-		"/addToOffer",
-		verifyJWT,
-
-		handleAddActivationKeyToOffer
-	)
-	.post(
-		"/addToOwner",
-		verifyJWT,
-
-		handleAddActivationKeyToOwner
-	)
-	.route("/OwnerLinnk")
-	.get(
-		verifyJWT,
-
-		handleGetOwnerLinks
-	);
+	.get('/byOffer', verifyJWT, handleGetActivationKeysByOfferLink)
+	.get('/byOwner', verifyJWT, handleGetActivationKeysByOwnerLink)
+	.post('/addToOffer', verifyJWT, handleAddActivationKeyToOffer)
+	.post('/addNewToOffer', verifyJWT, handleNewAddActivationKeyToOffer)
+	.post('/addToOwner', verifyJWT, handleAddActivationKeyToOwner)
+	.route('/OwnerLinnk')
+	.get(verifyJWT, handleGetOwnerLinks);
 
 export { activationKeyRouter };

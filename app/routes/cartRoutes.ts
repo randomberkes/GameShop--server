@@ -1,5 +1,5 @@
-import express from "express";
-import verifyJWT from "../middleware/verifyJWT";
+import express from 'express';
+import verifyJWT from '../middleware/verifyJWT';
 
 import {
 	handleAddCartLink,
@@ -8,41 +8,27 @@ import {
 	// handleGetAmountOfCartLink,
 	handleGetCartOffersByUser,
 	handleIncrementCartLink,
-} from "../controllers/cartControllers";
+} from '../controllers/cartControllers';
 
 const cartRouter = express.Router();
 const amountRouter = express.Router();
 // const deleteAllRouter = express.Router();
 
 cartRouter
-	.route("/")
-	.post(
-		verifyJWT,
-
-		handleAddCartLink
-	)
-	.delete(
-		verifyJWT,
-
-		handleDeleteCartLink
-	)
-	.get(
-		verifyJWT,
-
-		handleGetCartOffersByUser
-	);
+	.route('/')
+	.post(verifyJWT, handleAddCartLink)
+	.delete(verifyJWT, handleDeleteCartLink)
+	.get(verifyJWT, handleGetCartOffersByUser);
 
 const increment = amountRouter.get(
-	"/increment",
+	'/increment',
 	verifyJWT,
-
 	handleIncrementCartLink
 );
 const decrement = amountRouter.get(
-	"/decrement",
+	'/decrement',
 	verifyJWT,
-
 	handleDecrementCartLink
 );
 
-export { cartRouter, increment, decrement };
+export { cartRouter, decrement, increment };

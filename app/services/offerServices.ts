@@ -17,12 +17,21 @@ export const mapDataToProduct = (data: any) => {
 const getOffersFromDB = async (productID: number) => {
 	const response = await connectToDatabase(async (db) => {
 		return await db.query(
-			"SELECT DISTINCT users.name,offers.price, offers.id FROM users JOIN offers ON offers.user_id = users.id JOIN activation_keys ON activation_keys.offer_id = offers.id WHERE offers.product_id = $1;",
+			"SELECT DISTINCT users.name,offers.price, offers.id FROM users JOIN offers ON offers.user_id = users.id JOIN activation_keys ON activation_keys.offer_id = offers.id WHERE offers.product_id = $1 AND offers.price != 0;",
 			[productID]
 		);
 	});
 	const offers = response.rows;
 	return offers;
+};
+
+const updateOfferPriceInDB = async (offerID: number, newPrice: number) => {
+	await connectToDatabase(async (db) => {
+		return await db.query("UPDATE offers SET price = $1 WHERE id = $2;", [
+			newPrice,
+			offerID,
+		]);
+	});
 };
 
 const getOffersByUserFromDB = async (userID: number) => {
@@ -92,4 +101,5 @@ export {
 	getOffersByUserFromDB,
 	addNewOfferLinkToDB,
 	getOfferLinkByUserAndProduct,
+	updateOfferPriceInDB,
 };

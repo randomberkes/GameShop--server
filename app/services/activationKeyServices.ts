@@ -52,6 +52,18 @@ const addActivationKeyToOfferInDB = async (
 		);
 	});
 };
+
+const addNewActivationKeyToOfferInDB = async (
+	offerID: number,
+	activationKey: number
+) => {
+	const response = await connectToDatabase(async (db) => {
+		return await db.query(
+			"INSERT INTO activation_keys (offer_id, activation_key) VALUES ($1, $2);",
+			[offerID, activationKey]
+		);
+	});
+};
 const transferActivationTokenOwnership = async (
 	userID: number,
 	activationKeyID: number
@@ -72,4 +84,5 @@ export {
 	getActivationKeysByOfferLinkFromDB,
 	addActivationKeyToOfferInDB,
 	transferActivationTokenOwnership,
+	addNewActivationKeyToOfferInDB,
 };

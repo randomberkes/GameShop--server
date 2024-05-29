@@ -1,13 +1,11 @@
 import {
 	addCartLinkToDB,
 	decrementCartLinkFromDB,
-	deleteAllCartLinksByUserFromDB,
 	deleteCartLinkFromDB,
-	// getAmountOfCartLinkFromDB,
 	getCartOffersByUserFromDB,
 	getMaxAmountOfCartLinkFromDB,
 	incrementCartLinkFromDB,
-} from "../services/cartServices";
+} from '../services/cartServices';
 
 const handleAddCartLink = async (req: any, res: any) => {
 	const offerID = req.body.offerID;
@@ -15,21 +13,20 @@ const handleAddCartLink = async (req: any, res: any) => {
 	try {
 		await addCartLinkToDB(userID, offerID);
 		res.sendStatus(201);
-	} catch (err) {
-		res.status(500).json({ message: err });
+	} catch (err: any) {
+		res.status(500).json({ message: err.message });
 	}
 };
 
 const handleDeleteCartLink = async (req: any, res: any) => {
 	const offerID = req.query.offerID;
-	console.log(offerID);
 	const userID = req.id;
 
 	try {
 		await deleteCartLinkFromDB(offerID, userID);
 		res.sendStatus(204);
-	} catch (err) {
-		res.status(500).json({ message: err });
+	} catch (err: any) {
+		res.status(500).json({ message: err.message });
 	}
 };
 
@@ -38,21 +35,10 @@ const handleGetCartOffersByUser = async (req: any, res: any) => {
 	try {
 		const products = await getCartOffersByUserFromDB(userID);
 		res.status(200).json(products);
-	} catch (err) {
-		res.status(500).json({ message: err });
+	} catch (err: any) {
+		res.status(500).json({ message: err.message });
 	}
 };
-
-// const handleDeleteAllCartLinksByUser = async (req: any, res: any) => {
-// 	const userID = req.id;
-
-// 	try {
-// 		await deleteAllCartLinksByUserFromDB(userID);
-// 		res.sendStatus(204);
-// 	} catch (err) {
-// 		res.status(500).json({ message: err });
-// 	}
-// };
 
 const handleGetMaxAmountOfCartLink = async (req: any, res: any) => {
 	const offerID = req.query.offerID;
@@ -69,13 +55,11 @@ const handleGetMaxAmountOfCartLink = async (req: any, res: any) => {
 const handleIncrementCartLink = async (req: any, res: any) => {
 	const offerID = req.query.offerID;
 	const userID = req.id;
-	console.log(req.query);
 	try {
 		const amount = await incrementCartLinkFromDB(offerID, userID);
-		console.log(amount);
 		res.status(202).json(amount);
-	} catch (err) {
-		res.status(500).json({ message: err });
+	} catch (err: any) {
+		res.status(500).json({ message: err.message });
 	}
 };
 
@@ -85,16 +69,16 @@ const handleDecrementCartLink = async (req: any, res: any) => {
 	try {
 		const amount = await decrementCartLinkFromDB(offerID, userID);
 		res.status(202).json(amount);
-	} catch (err) {
-		res.status(500).json({ message: err });
+	} catch (err: any) {
+		res.status(500).json({ message: err.message });
 	}
 };
 
 export {
 	handleAddCartLink,
+	handleDecrementCartLink,
 	handleDeleteCartLink,
 	handleGetCartOffersByUser,
-	handleIncrementCartLink,
-	handleDecrementCartLink,
 	handleGetMaxAmountOfCartLink,
+	handleIncrementCartLink,
 };
