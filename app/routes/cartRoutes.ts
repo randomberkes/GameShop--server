@@ -5,14 +5,12 @@ import {
 	handleAddCartLink,
 	handleDecrementCartLink,
 	handleDeleteCartLink,
-	// handleGetAmountOfCartLink,
 	handleGetCartOffersByUser,
 	handleIncrementCartLink,
 } from '../controllers/cartControllers';
 
 const cartRouter = express.Router();
 const amountRouter = express.Router();
-// const deleteAllRouter = express.Router();
 
 cartRouter
 	.route('/')

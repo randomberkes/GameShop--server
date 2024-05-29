@@ -222,7 +222,7 @@ describe('authEndpoints', () => {
 		});
 
 		afterAll((done) => {
-			server.close(done); // Close the server after all tests
+			server.close(done);
 		});
 
 		it('should return a new access token when provided with a valid refresh token', async () => {

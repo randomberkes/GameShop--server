@@ -24,7 +24,6 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
-//middleware for cookies
 app.use(cookieParser());
 
 app.use('/activationKey', activationKeyRouter);

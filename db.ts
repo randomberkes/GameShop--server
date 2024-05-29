@@ -1,7 +1,6 @@
-import pg from "pg";
-import "dotenv/config";
+import 'dotenv/config';
+import pg from 'pg';
 
-//connection pool
 const dbConfig = {
 	user: process.env.USER,
 	password: process.env.PASSWORD,

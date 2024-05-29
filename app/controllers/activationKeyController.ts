@@ -20,8 +20,8 @@ const handleGetOwnerLinks = async (req: any, res: any) => {
 	try {
 		const ownerLinks = await getOwnerLinksFromDB(userID);
 		res.status(200).json(ownerLinks);
-	} catch (err) {
-		res.status(500).json({ message: err });
+	} catch (err: any) {
+		res.status(500).json({ message: err.message });
 	}
 };
 
@@ -30,8 +30,8 @@ const handleGetActivationKeysByOwnerLink = async (req: any, res: any) => {
 	try {
 		const activationKeys = await getActivationKeysByOwnerLinkFromDB(ownerID);
 		res.status(200).json(activationKeys);
-	} catch (err) {
-		res.status(500).json({ message: err });
+	} catch (err: any) {
+		res.status(500).json({ message: err.message });
 	}
 };
 
@@ -45,8 +45,8 @@ const handleAddActivationKeyToOffer = async (req: any, res: any) => {
 		if (!offerID) offerID = await addNewOfferLinkToDB(productID, userID, 0);
 		await addActivationKeyToOfferInDB(offerID, activationKeyID);
 		res.sendStatus(201);
-	} catch (err) {
-		res.status(500).json({ message: err });
+	} catch (err: any) {
+		res.status(500).json({ message: err.message });
 	}
 };
 

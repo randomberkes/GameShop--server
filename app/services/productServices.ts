@@ -41,7 +41,6 @@ export const getProductsByNameFromDB = async (
 	productName: string | ParsedQs | string[] | ParsedQs[] | undefined
 ) => {
 	const response = await connectToDatabase(async (db) => {
-		//prepare satemant
 		return await db.query(
 			`SELECT * FROM products WHERE LOWER(name) ~'.*${
 				typeof productName === 'string'
@@ -91,7 +90,6 @@ export const getProductsByFilterFromDB = async (
 		fullFilter +
 		` LIMIT ${limit} OFFSET ${offset}`;
 	const response = await connectToDatabase(async (db) => {
-		//prepare satemant
 		return await db.query(select);
 	});
 	const allProducts = response.rows;
@@ -123,7 +121,6 @@ export const getProductsCountByFilterFromDB = async (filter: any) => {
 		'SELECT  COUNT( DISTINCT products.*) FROM products JOIN offers ON offers.product_id = products.id JOIN activation_keys ON activation_keys.offer_id = offers.id WHERE ' +
 		fullFilter;
 	const response = await connectToDatabase(async (db) => {
-		//prepare satemant
 		return await db.query(select);
 	});
 	const productsCount = response.rows[0].count;

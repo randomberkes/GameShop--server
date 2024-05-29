@@ -226,12 +226,13 @@ CREATE TABLE activation_keys (
 	activation_key TEXT UNIQUE
 )
 
-SELECT activation_keys.* FROM offers
-JOIN activation_keys ON activation_keys.offer_id = offers.id
-WHERE offers.id = 1;
+SELECT activation_keys.* FROM owners
+JOIN activation_keys ON activation_keys.owner_id = owners.id
+WHERE owners.id = 50;
 
 
-INSERT INTO activation_keys (offer_id, activation_key) VALUES (2, '6301-6660-7969-2810');
+INSERT INTO activation_keys (id, offer_id, activation_key) VALUES (50, 50, '5050-5050-5050-5050');
+INSERT INTO activation_keys (id, owner_id, activation_key) VALUES (60, 50, '0505-0505-0505-0505');
 INSERT INTO activation_keys (offer_id, activation_key) VALUES (2, '7735-3046-5926-4531');
 
 INSERT INTO activation_keys (offer_id, activation_key) VALUES (3,'5926-0504-5077-6160');
@@ -268,7 +269,7 @@ JOIN activation_keys ON activation_keys.offer_id = offers.id
 
 SELECT * FROM offers  WHERE user_id = 50;
 
-SELECT activation_key FROM activation_keys WHERE offer_id = 3
+SELECT * FROM activation_keys WHERE offer_id = 50
 
 INSERT INTO offers (product_id, user_id, price) VALUES (2, 16, 15000);
 INSERT INTO offers (id, product_id, user_id, price) VALUES (50, 1, 50, 50);
@@ -296,5 +297,5 @@ SELECT activation_keys.* FROM owners
 JOIN activation_keys ON activation_keys.owner_id = owners.id
 WHERE owners.user_id = 14;
 
-INSERT INTO owners (product_id, user_id) VALUES (2, 14);
+INSERT INTO owners (id, product_id, user_id) VALUES (50, 1, 50);
 

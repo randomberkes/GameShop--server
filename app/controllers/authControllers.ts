@@ -46,17 +46,15 @@ const handleRefresToken = async (req: Request, res: Response) => {
 
 const handleLogout = async (req: Request, res: Response) => {
 	const cookies = req.cookies;
-	if (!cookies?.jwt) return res.sendStatus(404); //OK, no content
+	if (!cookies?.jwt) return res.sendStatus(404);
 	const refreshToken = cookies.jwt;
 
-	// Is refreshToken in db ?
 	const rows = await getUserByRefreshTokenFromDB(refreshToken);
 	if (rows.length < 0) {
 		res.clearCookie('jwt', { httpOnly: true, sameSite: 'none', secure: true });
-		return res.sendStatus(404); //OK, no content
+		return res.sendStatus(404);
 	}
 
-	// Delete refreshToken from db
 	const foundUser = rows[0];
 	await setUserRefreshToken(foundUser.email, null);
 	res.clearCookie('jwt', { httpOnly: true });

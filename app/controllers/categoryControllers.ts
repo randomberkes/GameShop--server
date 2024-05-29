@@ -1,8 +1,6 @@
 import { Request, Response } from 'express';
 import { getCategoriesByTypeFromDB } from '../services/categoryServices';
 
-//TODO: joi
-
 const getCategoriesByType = async (req: Request, res: Response) => {
 	const categoryType = req.query.categoryType;
 	try {
