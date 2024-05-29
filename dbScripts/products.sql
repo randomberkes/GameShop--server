@@ -8,7 +8,7 @@ CREATE TABLE products (
 	rating_pegi TEXT,
 	number_of_players TEXT,
 	description TEXT,
-	price TEXT
+	img_path TEXT
 )
 
 CREATE TABLE categoryTypes (
